@@ -15,7 +15,9 @@ A aplicação disponibiliza endpoints REST para operações completas de CRUD de
 * Paginação
 * Ordenação
 * Busca por nome
+* Suporte a imagem de produto via URL
 
+A API foi construída de forma desacoplada, permitindo fácil integração com aplicações frontend.
 Além disso, o projeto já possui estrutura preparada para autenticação e segurança, permitindo evolução futura sem refatorações estruturais.
 
 ## 🚀 Funcionalidades
@@ -58,7 +60,7 @@ Essa organização garante:
 * Spring Web
 * Spring Data JPA
 * Spring Validation
-* Spring Security (configuração inicial)
+* Spring Security (ativo, com configuração inicial)
 * Hibernate
 * Lombok
 * MySQL
@@ -82,6 +84,7 @@ A API utiliza Bean Validation para garantir a integridade dos dados recebidos:
 * Nome obrigatório
 * Preço obrigatório e maior que zero
 * Quantidade obrigatória e maior ou igual a zero
+* Validação de formato de URL para imagem do produto
 
 Requisições inválidas retornam mensagens claras e estruturadas, facilitando o consumo da API por aplicações frontend.
 
@@ -91,19 +94,26 @@ O projeto utiliza um tratamento global de exceções (GlobalExceptionHandler), g
 
 * Padronização das respostas de erro
 * Mensagens claras para erros de validação
-* Mensagens apropriadas para erros de regra de negócio
 * Uso correto de códigos HTTP
 
 ## 🔐 Segurança
 
-* Configuração inicial do Spring Security
+A aplicação utiliza Spring Security com configuração inicial ativa.
+
+Atualmente, todos os endpoints estão liberados (`permitAll`) para facilitar o desenvolvimento e os testes via Postman.
+
+Configurações aplicadas:
+* Spring Security ativo via SecurityFilterChain
 * CSRF desativado (API stateless)
-* Endpoints liberados temporariamente (modo desenvolvimento)
-* Estrutura pronta para implementação de autenticação JWT
+* Centralização das regras de acesso
+* Estrutura preparada para futura implementação de autenticação e autorização
+
+A arquitetura permite evolução para autenticação baseada em JWT sem necessidade de refatorações estruturais.
 
 ## 🔒 Configurações Sensíveis
 
 Nenhuma credencial sensível é versionada no repositório.
+As variáveis devem ser definidas no ambiente ou em arquivos de configuração locais não versionados.
 
 As configurações são realizadas via variáveis de ambiente:
 ```
@@ -133,13 +143,14 @@ http://localhost:8080
 
 ## 📈 Próximos Passos (Evolução)
 
-🔐 Implementar autenticação com JWT
+🔐 Implementar autenticação e autorização com Spring Security e JWT
 
 🧪 Criar testes unitários e de integração
 
 📄 Documentar API com Swagger/OpenAPI
 
-🎨 Desenvolver frontend em React para consumo da API
+🎨 Desenvolver frontend em Angular para consumo da API
+
 
 # 👩‍💻 Autora
 

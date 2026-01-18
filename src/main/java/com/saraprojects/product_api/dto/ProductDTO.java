@@ -28,6 +28,12 @@ public class ProductDTO {
     @PositiveOrZero
     private Integer quantity;
 
+    @jakarta.validation.constraints.Pattern(
+            regexp = "^(http|https)://.*$",
+            message = "Image URL must be a valid URL"
+    )
+    private String imageUrl;
+
     // 🔁 Construtor que converte Entity → DTO
     public ProductDTO(Product product) {
         this.id = product.getId();
@@ -35,6 +41,7 @@ public class ProductDTO {
         this.description = product.getDescription();
         this.price = product.getPrice();
         this.quantity = product.getQuantity();
+        this.imageUrl = product.getImageUrl();
     }
 
     // 🔁 Metodo que converte DTO → Entity
@@ -45,6 +52,7 @@ public class ProductDTO {
                 .description(this.description)
                 .price(this.price)
                 .quantity(this.quantity)
+                .imageUrl(this.imageUrl)
                 .build();
     }
 }

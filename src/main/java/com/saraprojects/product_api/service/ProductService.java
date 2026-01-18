@@ -107,6 +107,7 @@ public class ProductService {
         existing.setDescription(dto.getDescription());
         existing.setPrice(dto.getPrice());
         existing.setQuantity(dto.getQuantity());
+        existing.setImageUrl(dto.getImageUrl());
 
         Product updated = repository.save(existing);
         return new ProductDTO(updated);
