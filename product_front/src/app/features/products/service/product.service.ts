@@ -8,6 +8,8 @@ export interface PagedProductResponse {
   currentPage: number;
   totalItems: number;
   totalPages: number;
+  pageSize: number;
+  sortBy: string;
 }
 
 @Injectable({
@@ -28,8 +30,7 @@ export class ProductService {
     const params = new HttpParams()
       .set('page', page)
       .set('size', size)
-      .set('sortBy', sortBy);
-
+      .set('sort', sortBy); 
     return this.http.get<PagedProductResponse>(
       `${this.API_URL}/paged`,
       { params }
@@ -47,7 +48,7 @@ export class ProductService {
       .set('name', name)
       .set('page', page)
       .set('size', size)
-      .set('sortBy', sortBy);
+      .set('sort', sortBy);
 
     return this.http.get<PagedProductResponse>(
       `${this.API_URL}/search`,
