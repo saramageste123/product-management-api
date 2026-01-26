@@ -1,10 +1,25 @@
 <div class="product-card" *ngIf="product">
-  <img [src]="product.imageUrl" alt="{{ product.name }}" />
+
+  <div
+    class="product-image"
+    [ngStyle]="{
+      'background-image': product.imageUrl
+        ? 'url(' + product.imageUrl + ')'
+        : 'url(assets/placeholder.png)'
+    }"
+  ></div>
 
   <div class="product-info">
-    <h3>{{ product.name }}</h3>
-    <p>{{ product.description }}</p>
-    <span>R$ {{ product.price }}</span>
-    <span>Qtd: {{ product.quantity }}</span>
+  <h3>{{ product.name }}</h3>
+
+  <p class="description">
+    {{ product.description }}
+  </p>
+
+  <div class="product-meta">
+    <span class="quantity">Qtd: {{ product.quantity }}</span>
+    <span class="price">R$ {{ product.price }}</span>
   </div>
+</div>
+
 </div>
