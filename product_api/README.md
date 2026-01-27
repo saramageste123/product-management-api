@@ -60,7 +60,7 @@ Essa organização garante:
 * Spring Web
 * Spring Data JPA
 * Spring Validation
-* Spring Security (ativo, com configuração inicial)
+* Spring Security (configuração inicial)
 * Hibernate
 * Lombok
 * MySQL
@@ -100,21 +100,16 @@ O projeto utiliza um tratamento global de exceções (GlobalExceptionHandler), g
 
 A aplicação utiliza Spring Security com configuração inicial ativa.
 
-Atualmente, todos os endpoints estão liberados (`permitAll`) para facilitar o desenvolvimento e os testes via Postman.
-
-Configurações aplicadas:
-* Spring Security ativo via SecurityFilterChain
+No estado atual:
+* Todos os endpoints estão liberados (`permitAll`)
 * CSRF desativado (API stateless)
-* Centralização das regras de acesso
-* Estrutura preparada para futura implementação de autenticação e autorização
+* Estrutura preparada para autenticação futura
 
 A arquitetura permite evolução para autenticação baseada em JWT sem necessidade de refatorações estruturais.
 
 ## 🔒 Configurações Sensíveis
 
 Nenhuma credencial sensível é versionada no repositório.
-As variáveis devem ser definidas no ambiente ou em arquivos de configuração locais não versionados.
-
 As configurações são realizadas via variáveis de ambiente:
 ```
 DB_URL
@@ -149,12 +144,12 @@ http://localhost:8080
 
 📄 Documentar API com Swagger/OpenAPI
 
-🎨 Desenvolver frontend em Angular para consumo da API
+🎨 Desenvolver frontend em Angular para consumo da API (Em desenvolvimento)
 
 
 # 👩‍💻 Autora
 
-Sara Mageste
+**Sara Mageste**
 
 Desenvolvedora de Software
 
