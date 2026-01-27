@@ -23,7 +23,7 @@ export class ProductService {
 
   getProductsPaged(
     page: number = 0,
-    size: number = 5,
+    size: number = 8,
     sortBy: string = 'id,asc'
   ): Observable<PagedProductResponse> {
 

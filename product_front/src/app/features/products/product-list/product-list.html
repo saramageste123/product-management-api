@@ -4,9 +4,20 @@
   <aside class="sidebar left">
 
     <div class="sidebar-top">
-      <button class="action-icon">
-        <span class="material-symbols-rounded">search</span>
-      </button>
+      <div class="search-container" [class.open]="isSearchOpen">
+        <button class="action-icon" (mousedown)="isSearchOpen && (ignoreBlur = true)" (click)="toggleSearch()">
+          <span class="material-symbols-rounded">search</span>
+        </button>
+
+        <input
+          #searchInput
+          type="text"
+          placeholder="Buscar produto..."
+          [(ngModel)]="searchTerm"
+          (input)="search()"
+          (blur)="closeSearch()"
+        />
+      </div>
 
       <button class="action-icon">
         <span class="material-symbols-rounded">tune</span>

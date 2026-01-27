@@ -2,7 +2,7 @@
 .products-page {
   background-color: #c5c3aa;
   min-height: 100vh;
-  padding: 32px 96px;
+  padding: 20px 96px;
   box-sizing: border-box;
   position: relative;
 }
@@ -22,6 +22,7 @@
 /* Sidebars */
 .sidebar {
   position: fixed;
+  z-index: 100;
   top: 32px;
   bottom: 32px;
 
@@ -31,12 +32,10 @@
   align-items: center;
 }
 
-/* esquerda */
 .sidebar.left {
   left: 32px;
 }
 
-/* direita */
 .sidebar.right {
   right: 32px;
 }
@@ -46,6 +45,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 37px;
 }
 
 .sidebar-center {
@@ -79,7 +79,7 @@
   padding: 0;
 }
 
-/* Material Symbols */
+/* Ícones */
 .material-symbols-rounded {
   font-size: 30px;
   line-height: 1;
@@ -94,4 +94,42 @@
 .products-content p {
   color: black;
   font-size: 14px;
+}
+
+/* Pesquisas */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  width: 37px;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.search-container input {
+  height: 37px;
+  width: 160%;
+
+  padding: 0 12px;
+  border: none;
+  outline: none;
+
+  background-color: #eaeae1;
+  border-radius: 999px;
+
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.search-container.open{
+  width: 220px;
+}
+
+.search-container.open input {
+  opacity: 1;
+}
+
+.search-container .action-icon {
+  flex-shrink: 0;
 }
