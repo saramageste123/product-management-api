@@ -1,59 +1,152 @@
-# ProductManagerFront
+# Product Management Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+Aplicação frontend desenvolvida em **Angular** para consumo da **Product Management API**.
 
-## Development server
+Este projeto simula a interface de um sistema real de gestão de produtos, como os utilizados em painéis administrativos de e-commerce, controle de estoque ou catálogos internos.
 
-To start a local development server, run:
+O foco do frontend está em:
+* Organização de código
+* Boas práticas do Angular moderno
+* Comunicação eficiente com API REST
+* Experiência do usuário (UX)
+* Escalabilidade e manutenção
 
+
+## 🔍 Visão Geral
+
+A aplicação permite gerenciar produtos através de uma interface web, consumindo dados do backend via HTTP.
+
+Funcionalidades disponíveis atualmente:
+* Listagem de produtos
+* Busca por nome
+* Paginação
+* Ordenação
+* Consumo de imagens via URL
+* Estados de loading e erro
+* Arquitetura modular e organizada por features
+
+O frontend foi desenvolvido de forma desacoplada do backend, permitindo fácil evolução e manutenção.
+
+
+## 🚀 Funcionalidades
+
+* Listagem de produtos
+* Busca de produtos por nome
+* Paginação dinâmica
+* Ordenação
+* Consumo de API REST
+* Tratamento de estados de loading
+* Tratamento de erros de requisição
+* Estrutura preparada para autenticação futura
+
+
+## 🧱 Arquitetura do Projeto
+
+O projeto segue uma organização baseada em **features**, prática recomendada para aplicações Angular escaláveis:
+
+```
+src/app
+│
+├── core
+│ ├── services → Serviços globais (API, interceptors futuramente)
+│ └── models → Interfaces e modelos
+│
+├── features
+│ └── products
+│ ├── components → Componentes de produtos
+│ ├── pages → Páginas (listagem, formulários)
+│ ├── service → Comunicação com API de produtos
+│ └── models → Modelos específicos
+│
+├── shared
+│ ├── components → Componentes reutilizáveis
+│ └── styles → Estilos compartilhados
+│
+└── app.component.ts
+
+```
+
+
+Essa abordagem garante:
+* Separação clara de responsabilidades
+* Facilidade de evolução
+* Código mais legível e testável
+
+
+## 🔗 Integração com o Backend
+
+Este frontend consome a **Product Management API**, desenvolvida em Java com Spring Boot.
+
+Endpoints utilizados incluem:
+* Listagem de produtos
+* Busca por nome
+* Paginação e ordenação
+
+Backend:
+```
+http://localhost:8080/api/products
+```
+
+## 🛠️ Tecnologias Utilizadas
+
+- Angular 21
+- TypeScript
+- RxJS
+- Angular HttpClient
+- Angular Router
+- HTML5
+- CSS3
+- Node.js
+- Angular CLI
+
+
+## ▶️ Como Executar o Projeto
+
+### Pré-requisitos
+* Node.js (versão compatível com Angular 21)
+* Angular CLI
+
+### Passos
+
+1. Clone o repositório
+2. Acesse a pasta do frontend:
 ```bash
+cd product_front
+```
+3. Instale as dependências:
+```
+npm install
+```
+
+4. Execute o projeto:
+```
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+A aplicação estará disponível em:
 ```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
+http://localhost:4200
 ```
+⚠️ Certifique-se de que o backend esteja em execução para o correto funcionamento da aplicação.
 
-## Building
+## 📈 Próximos Passos (Evolução)
 
-To build the project run:
+🔐 Implementar autenticação e autorização no frontend
 
-```bash
-ng build
-```
+📝 Criar formulários de criação e edição de produtos
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+🧪 Implementar testes unitários
 
-## Running unit tests
+🎨 Melhorar UX/UI e responsividade
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+📦 Implementar interceptors para tratamento global de erros e tokens
 
-```bash
-ng test
-```
+## 👩‍💻 Autora
 
-## Running end-to-end tests
+**Sara Mageste**
 
-For end-to-end (e2e) testing, run:
+Desenvolvedora de Software
 
-```bash
-ng e2e
-```
+Java • Spring Boot • Angular • APIs REST
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Projeto desenvolvido para estudo e portfólio profissional.
