@@ -19,7 +19,7 @@ public class ProductController {
     @GetMapping("/paged")
     public ResponseEntity<Map<String, Object>> getAllProductsPaged(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "8") int size,
             @RequestParam(defaultValue = "price,asc") String sortBy
     ) {
         return ResponseEntity.ok(service.getPagedResponse(page, size, sortBy));
@@ -29,7 +29,7 @@ public class ProductController {
     public ResponseEntity<Map<String, Object>> searchProducts(
             @RequestParam String name,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "8") int size,
             @RequestParam(defaultValue = "id,asc") String sortBy
     ) {
         return ResponseEntity.ok(service.searchProducts(name, page, size, sortBy));
