@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import com.saraprojects.product_api.domain.enums.ProductCategory;
+import com.saraprojects.product_api.domain.enums.ProductStatus;
 
 @Data
 @NoArgsConstructor
@@ -28,6 +30,12 @@ public class ProductDTO {
     @PositiveOrZero
     private Integer quantity;
 
+    @NotNull
+    private ProductCategory category;
+
+    @NotNull
+    private ProductStatus status;
+
     @jakarta.validation.constraints.Pattern(
             regexp = "^(http|https)://.*$",
             message = "Image URL must be a valid URL"
@@ -41,6 +49,8 @@ public class ProductDTO {
         this.description = product.getDescription();
         this.price = product.getPrice();
         this.quantity = product.getQuantity();
+        this.category = product.getCategory();
+        this.status = product.getStatus();
         this.imageUrl = product.getImageUrl();
     }
 
@@ -52,6 +62,8 @@ public class ProductDTO {
                 .description(this.description)
                 .price(this.price)
                 .quantity(this.quantity)
+                .category(this.category)
+                .status(this.status)
                 .imageUrl(this.imageUrl)
                 .build();
     }

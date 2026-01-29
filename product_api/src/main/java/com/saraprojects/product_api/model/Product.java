@@ -2,6 +2,8 @@ package com.saraprojects.product_api.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.saraprojects.product_api.domain.enums.ProductCategory;
+import com.saraprojects.product_api.domain.enums.ProductStatus;
 
 @Entity
 @Table(name = "products")
@@ -25,6 +27,14 @@ public class Product {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private ProductCategory category;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private ProductStatus status;
 
     @Column(name = "image_url")
     private String imageUrl;
