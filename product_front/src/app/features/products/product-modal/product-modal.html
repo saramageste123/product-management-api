@@ -50,7 +50,7 @@
 
               <input 
               type="number"
-              [ngModel]="editableProduct?.price"
+              [ngModel]="editableProduct?.originalPrice ?? editableProduct?.price"
               (ngModelChange)="editableProduct!.price = $event" 
               [class.input-error]="triedSave && !editableProduct?.price"
               [disabled]="!isEditMode"
@@ -72,7 +72,7 @@
 
               </div>
 
-              <input type="text" [ngModel]="editableProduct?.discount" disabled/>
+              <input type="text" [ngModel]="editableProduct?.discountPercentage ? editableProduct?.discountPercentage + '%' : ''" disabled/>
             </div>
 
           </div>
