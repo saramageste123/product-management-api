@@ -6,6 +6,8 @@ import lombok.*;
 import com.saraprojects.product_api.enums.ProductCategory;
 import com.saraprojects.product_api.enums.ProductStatus;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +24,10 @@ public class ProductDTO {
     @NotNull
     @Positive
     private Double price;
+
+    private Double originalPrice;
+
+    private BigDecimal discountPercentage;
 
     @NotNull
     @PositiveOrZero

@@ -22,6 +22,26 @@ public class ProductService {
 
     private final ProductRepository repository;
     private final NotificationService notificationService;
+    private final PromotionService promotionService;
+
+    private ProductDTO buildProductDTO(Product product) {
+
+        ProductDTO dto = new ProductDTO(product);
+        dto.setOriginalPrice(product.getPrice());
+
+        var promotion = promotionService.getActivePromotionForProduct(product);
+
+        if (promotion != null) {
+            double discount = promotion.getDiscountPercentage().doubleValue() / 100;
+            double discountedPrice = product.getPrice() * (1 - discount);
+            dto.setPrice(discountedPrice);
+            dto.setDiscountPercentage(promotion.getDiscountPercentage());
+        } else {
+            dto.setPrice(product.getPrice());
+            dto.setDiscountPercentage(null);
+        }
+        return dto;
+    }
 
     private Pageable buildPageable (int page, int size, String sortBy){
         try{
@@ -43,7 +63,7 @@ public class ProductService {
     private Map<String, Object> buildResponse (Page<Product> pageProducts, String sortBy){
         List<ProductDTO> products = pageProducts.getContent()
                 .stream()
-                .map(ProductDTO::new)
+                .map(this::buildProductDTO)
                 .toList();
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("products", products);
@@ -75,7 +95,7 @@ public class ProductService {
     // Return all products (without pagination)
     public List<ProductDTO> getAllProducts() {
         return repository.findAll().stream()
-                .map(ProductDTO::new)
+                .map(this::buildProductDTO)
                 .toList();
     }
 
@@ -83,7 +103,7 @@ public class ProductService {
     public ProductDTO getProductById(Long id) {
         Product product = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
-        return new ProductDTO(product);
+        return buildProductDTO(product);
     }
 
     // Create new product
