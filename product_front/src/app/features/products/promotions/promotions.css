@@ -1,0 +1,95 @@
+.promotions-page {
+  background-color: #c5c3aa;
+  min-height: 100vh;
+  padding: 20px 96px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.promotions-content {
+  box-sizing: border-box;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 13px;
+  margin-bottom: 30px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: #787662;
+}
+
+.delete-finished-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  background-color: #c0392b;
+  color: #eaeae1;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.delete-finished-btn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.delete-finished-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Sidebars */
+.sidebar {
+  position: fixed;
+  z-index: 100;
+  top: 32px;
+  bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar.left {
+  left: 32px;
+}
+
+.actions-bar{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Buttons */
+.action-icon {
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.back-btn {
+  background-color: #787662;
+}
+
+.add-btn {
+  background-color: #eaeae1;
+}
+
+.action-icon:hover {
+  opacity: 0.8;
+}

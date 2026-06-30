@@ -19,7 +19,6 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
 import { SideMenuComponent } from '../side-menu/side-menu';
 
 
-
 @Component({
   selector: 'app-product-list',
   standalone: true,
@@ -105,6 +104,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   // Notifications
   hasUnreadNotifications = false;
   private notificationsSubscription?: Subscription;
+
+  // Promotions
+  isPromotionsOpen = false;
   
   // ViewChild
   @ViewChild('searchContainer') searchContainer!: ElementRef;
@@ -331,6 +333,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
       this.openProductById(productId);
     });
+  }
+
+  //Promotions
+  togglePromotions(): void {
+    this.isPromotionsOpen = true;
   }
 
   //Product Popup
