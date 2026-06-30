@@ -165,7 +165,7 @@ http://localhost:8080
 
 ## 📈 Next Steps (Future Improvements)
 
-🔔 Applying promotion management
+📊 Applying promotion management
 
 🔐 Implement authentication and authorization using Spring Security + JWT
 
