@@ -39,6 +39,7 @@ The backend was developed using **Java 21 with Spring Boot**, following a layere
 * Bulk product deletion
 * Notifications management
 * Low stock notifications
+* Promotions management
 * Data validation
 * Global exception handling
 * Security structure prepared for JWT authentication
@@ -58,8 +59,9 @@ The frontend was developed using **Angular**, focusing on modular architecture, 
 * Product listing and management
 * Product creation and editing
 * Bulk product deletion
-* Notifications visualization
 * Side navigation menu
+* Notifications popup and Hitory
+* Promotions management
 * About/Profile section
 * Dynamic pagination and sorting
 * Search integration with the backend
@@ -152,7 +154,7 @@ http://localhost:4200
 
 ## 📈 Next steps
 
-📍 Expand notifications history and management
+📊 Applying promotion management
 
 📝 Implement promotions module
 
