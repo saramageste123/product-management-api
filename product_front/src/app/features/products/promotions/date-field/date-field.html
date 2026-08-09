@@ -1,0 +1,28 @@
+<div class="date-field">
+
+  <label class="date-label">{{ label() }}</label>
+
+  <div class="date-input-wrapper" [class.input-error]="invalid()">
+    <input
+      type="text"
+      class="date-input"
+      [placeholder]="placeholder()"
+      [value]="displayValue"
+      readonly
+      (click)="toggle()"
+    />
+    <button type="button" class="date-toggle" (click)="toggle()">
+      <span class="material-symbols-rounded">keyboard_arrow_up</span>
+    </button>
+  </div>
+
+  @if (isOpen()) {
+    <div class="date-popover">
+      <app-calendar
+        [selectedDate]="selectedDate()"
+        (dateSelected)="onDaySelected($event)"
+      ></app-calendar>
+    </div>
+  }
+
+</div>

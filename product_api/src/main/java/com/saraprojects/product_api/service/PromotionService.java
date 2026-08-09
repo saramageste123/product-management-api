@@ -53,6 +53,8 @@ public class PromotionService {
                     "Discount percentage must be between 0 and 100");
         }
 
+        validateNoOverlap(dto);
+
         Promotion promotion = new Promotion();
 
         promotion.setTargetType(dto.targetType());
@@ -85,6 +87,40 @@ public class PromotionService {
         Promotion saved = repository.save(promotion);
 
         return new PromotionDTO(saved);
+    }
+
+    //Validation Promotion
+    private void validateNoOverlap(PromotionCreateDTO dto) {
+
+        if (dto.targetType() == PromotionTargetType.PRODUCT) {
+
+            if (dto.productId() == null) {
+                throw new RuntimeException("Product is required");
+            }
+
+            List<Promotion> overlapping = repository.findOverlappingByProduct(
+                    dto.productId(), dto.startDate(), dto.endDate());
+
+            if (!overlapping.isEmpty()) {
+                throw new RuntimeException(
+                        "This product already has a promotion overlapping this date range");
+            }
+        }
+
+        if (dto.targetType() == PromotionTargetType.CATEGORY) {
+
+            if (dto.category() == null) {
+                throw new RuntimeException("Category is required");
+            }
+
+            List<Promotion> overlapping = repository.findOverlappingByCategory(
+                    dto.category(), dto.startDate(), dto.endDate());
+
+            if (!overlapping.isEmpty()) {
+                throw new RuntimeException(
+                        "This category already has a promotion overlapping this date range");
+            }
+        }
     }
 
     // Delete promotion

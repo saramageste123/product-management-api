@@ -1,0 +1,36 @@
+<div class="calendar">
+
+  <div class="calendar-header">
+    <span class="calendar-month">{{ monthLabel() }}</span>
+    <div class="calendar-nav">
+      <button type="button" (click)="previousMonth()">
+        <span class="material-symbols-rounded">keyboard_arrow_up</span>
+      </button>
+      <button type="button" (click)="nextMonth()">
+        <span class="material-symbols-rounded">keyboard_arrow_down</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="calendar-weekdays">
+    @for (day of weekDays; track $index) {
+      <span>{{ day }}</span>
+    }
+  </div>
+
+  <div class="calendar-grid">
+    @for (day of days(); track day.date.getTime()) {
+      <button
+        type="button"
+        class="calendar-day"
+        [class.outside]="!day.inCurrentMonth"
+        [class.selected]="day.isSelected"
+        [class.today]="day.isToday"
+        (click)="selectDay(day)"
+      >
+        {{ day.date.getDate() }}
+      </button>
+    }
+  </div>
+
+</div>

@@ -1,0 +1,5 @@
+@if (toastService.visible()) {
+  <div class="success-toast" [class.error-toast]="toastService.type() === 'error'">
+    {{ toastService.message() }}
+  </div>
+}

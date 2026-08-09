@@ -1,0 +1,83 @@
+<div class="modal-backdrop" (click)="cancel()">
+
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+
+    <div class="modal-body">
+
+      <div class="field">
+        <div class="field-label-row">
+          <label class="field-label">{{ targetTypeLabel() }}</label>
+          <button type="button" class="type-toggle-btn" (click)="toggleTypeMenu()">
+            <span class="material-symbols-rounded">keyboard_arrow_up</span>
+          </button>
+
+          @if (isTypeMenuOpen()) {
+            <ul class="type-menu">
+              @for (option of targetTypeOptions; track option.id) {
+                <li
+                  class="type-menu-option"
+                  [class.selected]="option.id === targetType()"
+                  (click)="selectTargetType(option)"
+                >
+                  {{ option.label }}
+                </li>
+              }
+            </ul>
+          }
+        </div>
+
+        <app-dropdown-select
+          [options]="targetOptions()"
+          [selected]="selectedTarget()"
+          [invalid]="targetInvalid()"
+          placeholder="Select..."
+          (optionSelected)="onTargetSelected($event)"
+        ></app-dropdown-select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">DISCOUNT</label>
+        <div class="discount-input-wrapper" [class.input-error]="discountInvalid()">
+          <input
+            type="number"
+            class="discount-input"
+            min="0"
+            max="100"
+            placeholder="0"
+            [value]="discount()"
+            (input)="onDiscountChange($event)"
+          />
+          <span class="discount-suffix">%</span>
+        </div>
+      </div>
+
+      <app-date-field
+        label="START DATE"
+        [selectedDate]="startDate()"
+        [invalid]="startDateInvalid()"
+        (dateSelected)="onStartDateSelected($event)"
+      ></app-date-field>
+
+      <app-date-field
+        label="END DATE"
+        [selectedDate]="endDate()"
+        [invalid]="endDateInvalid()"
+        (dateSelected)="onEndDateSelected($event)"
+      ></app-date-field>
+
+    </div>
+
+    <div class="modal-footer">
+
+      <p class="modal-error">{{ displayError() }}</p>
+
+      <button type="button" class="btn-cancel" (click)="cancel()" [disabled]="saving()">Cancel</button>
+      <button type="button" class="btn-save" [disabled]="saving()" (click)="submit()">
+        {{ saving() ? 'Saving...' : 'Save' }}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

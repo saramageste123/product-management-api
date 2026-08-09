@@ -41,13 +41,12 @@ public class Promotion {
     @Column(nullable = false)
     private LocalDateTime endDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PromotionStatus status;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    @Transient
-    public PromotionStatus getStatus() {
-        return calculateStatus();
-    }
 
     public PromotionStatus calculateStatus() {
 
@@ -67,5 +66,6 @@ public class Promotion {
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
+        this.status = calculateStatus();
     }
 }

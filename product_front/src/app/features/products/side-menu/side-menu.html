@@ -25,9 +25,8 @@
         <div class="notification-dot menu-notification-dot" *ngIf="hasUnreadNotifications"></div>
       </button>
 
-      <button class="menu-btn disabled">
+      <button class="menu-btn" (click)="togglePromotions()">
         Promotions
-        <span class="coming-soon-badge">Coming soon</span>
       </button>
 
       <button class="menu-btn" (click)="toggleAbout()">

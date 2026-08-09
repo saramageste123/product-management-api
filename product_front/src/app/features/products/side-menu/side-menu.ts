@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { AboutMeComponent } from '../about-me/about-me';
 import { NotificationsPopupComponent } from '../notifications/notifications-popup/notifications-popup';
@@ -33,6 +34,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   @Output() closeMenu = new EventEmitter<void>();
   @Output() openProductFromNotification = new EventEmitter<number>();
   @Output() unreadStateChange = new EventEmitter<boolean>();
+  @Output() promotionsClicked = new EventEmitter<void>();
 
   @ViewChild('menuContainer')
   menuContainer!: ElementRef;
@@ -47,10 +49,9 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   private notificationsSubscription?: Subscription;
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService, private router: Router) {}
 
   ngOnInit(): void {
-    // atualiza o dot sempre que produto for salvo
     this.notificationsSubscription =
       this.notificationService.notificationsUpdated$.subscribe(() => {
         this.refreshUnreadState();
@@ -109,5 +110,10 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     this.isNotificationDetailsModalOpen = false;
     this.isNotificationsOpen = false;
     this.openProductFromNotification.emit(notification.productId);
+  }
+
+  togglePromotions(): void {
+    this.closeMenu.emit();
+    this.router.navigate(['/promotions']);
   }
 }

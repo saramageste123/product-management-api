@@ -22,6 +22,7 @@ The application provides a complete frontend interface for product management op
 * Bulk product deletion
 * Notifications management
 * Low stock notifications
+* Promotions management
 * Product image support via URL
 * Side navigation menu
 * About/Profile section
@@ -41,9 +42,10 @@ Additionally, the project communicates with a Java Spring Boot REST API, maintai
 * Bulk product deletion
 * Product search by name
 * Dynamic pagination and sorting
+* Side navigation menu
 * Notifications management
 * Low stock notification support
-* Side navigation menu
+* Promotions management
 * About/Profile section
 * Reusable modal components
 * Loading state handling
@@ -62,13 +64,14 @@ src/app
 ├── features/products 
 │ 
 ├── about-me              → Profile/About section 
+├── confirmation-modal    → Confirm/cancel action modal 
 ├── enums                 → Application enums 
 ├── models                → Interfaces and data models 
 ├── notifications         → Notifications feature 
 ├── product-card          → Product card component 
-├── product-delete-modal  → Delete confirmation modal 
-├── product-list          → Product listing 
+├── home                  → Product listing 
 ├── product-modal         → Create/Edit product modal 
+├── promotions            → Promotions feature  
 ├── service               → API communication layer 
 └── side-menu             → Side navigation menu
 
@@ -95,6 +98,7 @@ Endpoints currently used include:
 * Product search
 * Pagination and sorting
 * Notifications management
+* Promotions management
 
 Backend base URL:
 
@@ -146,7 +150,7 @@ http://localhost:4200
 
 ## 📈 Next Steps (Future Improvements)
 
-📍 Implement notification history
+📊 Applying promotion management
 
 📝 Implement promotions
 

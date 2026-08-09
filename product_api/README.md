@@ -13,6 +13,7 @@ The application provides REST endpoints for complete product CRUD operations, in
 * Product image support via URL
 * Notifications management
 * Low stock notifications
+* Promotions management
 * Bulk product deletion
 * Dynamic filtering with specifications
 
@@ -29,6 +30,7 @@ Additionally, the project already includes an initial structure prepared for aut
 * Notifications management
 * Low stock notification support
 * Unread notifications counting
+* Promotions management
 * Data validation using Bean Validation
 * Global exception handling
 * Standardized error responses
@@ -74,15 +76,22 @@ This organization ensures:
 
 ## 📌 Endpoints
 ```
-POST /api/products                    → Create product 
-PUT /api/products/id/{id}             → Update product 
-DELETE /api/products/id/{id}          → Delete product 
-DELETE /api/products/bulk-delete      → Delete selected products 
-GET /api/products/id/{id}             → Get product by ID 
-GET /api/products                     → Get products with search, filters, pagination and sorting 
-GET /api/products/all                 → Get all products 
-GET /notifications                    → Get notifications 
-PUT /notifications/{id}/read          → Mark notification as read 
+POST /api/products                    → Create product
+PUT /api/products/id/{id}             → Update product
+DELETE /api/products/id/{id}          → Delete product
+DELETE /api/products/bulk-delete      → Delete selected products
+GET /api/products/id/{id}             → Get product by ID
+GET /api/products                     → Get products with search, filters, pagination and sorting
+GET /api/products/all                 → Get all products
+
+POST /api/promotions                  → Create promotion
+GET /api/promotions                   → Get all promotions
+GET /api/promotions/{id}              → Get promotion by ID
+DELETE /api/promotions/{id}           → Delete finished promotion
+DELETE /api/promotions/bulk-delete    → Delete selected finished promotions
+
+GET /notifications                    → Get notifications
+PUT /notifications/{id}/read          → Mark notification as read
 GET /notifications/unread/count       → Count unread notifications
 
 ```
@@ -156,7 +165,7 @@ http://localhost:8080
 
 ## 📈 Next Steps (Future Improvements)
 
-🔔 Improve notifications management
+📊 Applying promotion management
 
 🔐 Implement authentication and authorization using Spring Security + JWT
 

@@ -289,26 +289,6 @@ hr {
   color: #eaeae1;
 }
 
-.success-toast {
-  position: fixed;
-
-  bottom: 24px;
-  left: 24px;
-
-  padding: 14px 20px;
-
-  background-color: #2d8a4d;
-  color: #eaeae1;
-
-  border-radius: 100px;
-
-  font-size: 14px;
-  font-weight: 500;
-
-  z-index: 999;
-
-  animation: fadeInOut 4s ease forwards;
-}
 
 @keyframes fadeInOut {
 

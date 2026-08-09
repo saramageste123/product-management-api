@@ -1,0 +1,59 @@
+.date-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.date-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #787662;
+}
+
+.date-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #eaeae1;
+  border: 1px solid #787662;
+  border-radius: 999px;
+  padding: 8px 12px;
+}
+
+.date-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: #787662;
+  outline: none;
+  cursor: pointer;
+}
+
+.date-toggle {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: #787662;
+  color: #eaeae1;
+  cursor: pointer;
+}
+
+.date-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 60;
+}
+
+.date-input-wrapper.input-error {
+  border: 1.5px solid #a03426 !important;
+  background-color: rgba(160, 52, 38, 0.05);
+}

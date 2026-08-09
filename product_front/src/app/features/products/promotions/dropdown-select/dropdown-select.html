@@ -1,0 +1,29 @@
+<div class="dropdown" [class.compact]="variant() === 'compact'">
+
+  <button
+    type="button"
+    class="dropdown-trigger"
+    [class.input-error]="invalid()"
+    (click)="toggle()"
+  >
+    <span>{{ selected()?.label ?? placeholder() }}</span>
+    <span class="material-symbols-rounded arrow" [class.open]="isOpen()">keyboard_arrow_down</span>
+  </button>
+
+  @if (isOpen()) {
+    <ul class="dropdown-panel">
+      @for (option of options(); track option.id) {
+        <li
+          class="dropdown-option"
+          [class.selected]="option.id === selected()?.id"
+          (click)="select(option)"
+        >
+          {{ option.label }}
+        </li>
+      } @empty {
+        <li class="dropdown-empty">No options</li>
+      }
+    </ul>
+  }
+
+</div>
