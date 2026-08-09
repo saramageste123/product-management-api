@@ -63,10 +63,12 @@
 }
 
 .actions-bar{
+  position: fixed;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap: 16px;
+  right: 100px;
 }
 
 /* Buttons */
@@ -92,4 +94,9 @@
 
 .action-icon:hover {
   opacity: 0.8;
+}
+
+.promotions-page.blurred {
+  filter: blur(4px);
+  pointer-events: none;
 }

@@ -1,4 +1,4 @@
-<div class="promotions-page">
+<div class="promotions-page" [class.blurred]="showModal()">
 
   <aside class="sidebar left">
 
@@ -12,19 +12,33 @@
 
   <div class="page-header">
     <h1>Promotions</h1>
+  </div>
 
-    <div class="actions-bar">
+  <div class="actions-bar">
 
       <button class="delete-finished-btn" disabled>
         Delete finished
       </button>
 
-      <button class="action-icon add-btn">
+      <button class="action-icon add-btn" (click)="openCreateModal()">
         <span class="material-symbols-rounded">add</span>
       </button>
 
     </div>
 
-  </div>
-
+    <div class="promotions-list">
+      <app-promotions-list
+        [promotions]="promotions()"
+      ></app-promotions-list>
+    </div>
+    
 </div>
+
+@if (showModal()) {
+  <app-promotion-form-modal
+    [saving]="creatingPromotion()"
+    [serverError]="createError()"
+    (closed)="closeModal()"
+    (save)="onCreatePromotion($event)"
+  ></app-promotion-form-modal>
+}
