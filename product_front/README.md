@@ -69,7 +69,7 @@ src/app
 ├── models                → Interfaces and data models 
 ├── notifications         → Notifications feature 
 ├── product-card          → Product card component 
-├── product-list          → Product listing 
+├── home                  → Product listing 
 ├── product-modal         → Create/Edit product modal 
 ├── promotions            → Promotions feature  
 ├── service               → API communication layer 
