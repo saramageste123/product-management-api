@@ -1,0 +1,65 @@
+<div class="promotion-table">
+
+  <!-- Header -->
+  <div class="table-header">
+
+    <div class="promotion-column">
+      PRODUCTS
+      <span class="material-symbols-rounded">keyboard_arrow_down</span>
+    </div>
+
+    <div class="discount-column">
+      DISCOUNT
+      <span class="material-symbols-rounded">keyboard_arrow_down</span>
+    </div>
+
+    <div class="start-column">
+      START DATE
+      <span class="material-symbols-rounded">keyboard_arrow_down</span>
+    </div>
+
+    <div class="end-column">
+      END DATE
+      <span class="material-symbols-rounded">keyboard_arrow_down</span>
+    </div>
+
+    <div class="status-column">
+      STATUS
+      <span class="material-symbols-rounded">keyboard_arrow_down</span>
+    </div>
+
+  </div>
+
+  <!-- Body -->
+  <div class="table-body">
+
+    <div class="table-row" *ngFor="let promotion of promotions">
+
+      <div class="promotion-column">{{ promotion.targetName }}</div>
+
+      <div class="discount-column">{{ promotion.discountPercentage }}%</div>
+
+      <div class="start-column">{{ promotion.startDate | date:'dd/MM/yyyy' }}</div>
+
+      <div class="end-column">{{ promotion.endDate | date:'dd/MM/yyyy' }}</div>
+
+      <div class="status-column">{{ promotion.status }}</div>
+
+    </div>
+
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+
+    <button>
+      <span class="material-symbols-rounded">chevron_left</span>
+    </button>
+
+    <button>
+      <span class="material-symbols-rounded">chevron_right</span>
+    </button>
+
+  </div>
+
+</div>
