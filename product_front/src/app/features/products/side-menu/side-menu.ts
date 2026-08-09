@@ -52,7 +52,6 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   constructor(private notificationService: NotificationService, private router: Router) {}
 
   ngOnInit(): void {
-    // atualiza o dot sempre que produto for salvo
     this.notificationsSubscription =
       this.notificationService.notificationsUpdated$.subscribe(() => {
         this.refreshUnreadState();
