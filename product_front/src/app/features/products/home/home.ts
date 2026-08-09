@@ -17,10 +17,11 @@ import { ProductCardComponent } from '../product-card/product-card';
 import { ProductModalComponent } from '../product-modal/product-modal';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal';
 import { SideMenuComponent } from '../side-menu/side-menu';
+import { ToastService } from '../service/toast.service';
 
 
 @Component({
-  selector: 'app-product-list',
+  selector: 'app-home',
   standalone: true,
   
   imports: [
@@ -32,11 +33,11 @@ import { SideMenuComponent } from '../side-menu/side-menu';
     SideMenuComponent
   ],
 
-  templateUrl: './product-list.html',
-  styleUrl: './product-list.css',
+  templateUrl: './home.html',
+  styleUrl: './home.css',
 })
 
-export class ProductListComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy {
 
   // Product
   products: Product[] = [];
@@ -77,7 +78,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
   showExitConfirm = false;
   showDeleteConfirm = false;
   showBulkDeleteConfirm = false;
-  showDeleteSuccess = false;
   showDiscountInfo = false;
 
   // Product State
@@ -118,7 +118,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private notificationService: NotificationService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {}
 
   // Lifecycle
@@ -521,6 +522,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
           this.closeDetails();
           this.loadProductsWithFilters();
           this.notificationService.notifyNotificationsUpdated();
+          this.toastService.show('Product created successfully!');
         }
       });
     } else {
@@ -555,6 +557,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       this.showDeleteConfirm = false;
       this.closeDetails();
       this.loadProductsWithFilters();
+      this.toastService.show('Product removed successfully!');
     });
 
   }
@@ -612,10 +615,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
           this.selectedProducts = [];
           this.isDeleteMode = false;
           this.loadProductsWithFilters();
-          this.showDeleteSuccess = true;
-          setTimeout(() => {
-            this.showDeleteSuccess = false;
-          }, 4000);
+          this.toastService.show('Products removed successfully!');
         },
         error: (err) => {
           console.error('Error deleting products', err);
