@@ -26,6 +26,11 @@ export class PromotionsComponent implements OnInit {
   creatingPromotion = signal(false);
   createError = signal('');
 
+  // Pagination
+  currentPage = signal(0);
+  totalPages = signal(0);
+  readonly pageSize = 5;
+
   constructor(
     private router: Router,
     private promotionService: PromotionService,
@@ -43,9 +48,10 @@ export class PromotionsComponent implements OnInit {
   loadPromotions(): void {
     this.loading.set(true);
 
-    this.promotionService.getAllPromotions().subscribe({
-      next: (promotions) => {
-        this.promotions.set(promotions);
+    this.promotionService.getPromotions(this.currentPage(), this.pageSize).subscribe({
+      next: (response) => {
+        this.promotions.set(response.promotions);
+        this.totalPages.set(response.totalPages);
         this.loading.set(false);
       },
       error: () => {
@@ -53,6 +59,20 @@ export class PromotionsComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  nextPage(): void {
+    if (this.currentPage() < this.totalPages() - 1) {
+      this.currentPage.update(page => page + 1);
+      this.loadPromotions();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage() > 0) {
+      this.currentPage.update(page => page - 1);
+      this.loadPromotions();
+    }
   }
 
   openCreateModal(): void {
@@ -72,6 +92,7 @@ export class PromotionsComponent implements OnInit {
       next: () => {
         this.creatingPromotion.set(false);
         this.showModal.set(false);
+        this.currentPage.set(0);
         this.loadPromotions();
         this.toastService.show('Promotion created successfully!');
       },

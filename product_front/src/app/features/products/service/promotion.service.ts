@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Promotion } from '../models/promotion.model';
+import { Promotion, PagedPromotionResponse } from '../models/promotion.model';
 import { PromotionCreateRequest } from '../models/promotion-create.model';
 
 @Injectable({
@@ -12,6 +12,15 @@ export class PromotionService {
   private readonly apiUrl = 'http://localhost:8080/api/promotions';
 
   constructor(private http: HttpClient) {}
+
+  getPromotions(page: number, size: number, sortBy: string = 'startDate,desc'): Observable<PagedPromotionResponse> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('sortBy', sortBy);
+
+    return this.http.get<PagedPromotionResponse>(this.apiUrl, { params });
+  }
 
   getAllPromotions(): Observable<Promotion[]> {
     return this.http.get<Promotion[]>(`${this.apiUrl}/all`);

@@ -29,6 +29,10 @@
     <div class="promotions-list">
       <app-promotions-list
         [promotions]="promotions()"
+        [currentPage]="currentPage()"
+        [totalPages]="totalPages()"
+        (previousPage)="previousPage()"
+        (nextPage)="nextPage()"
       ></app-promotions-list>
     </div>
     
