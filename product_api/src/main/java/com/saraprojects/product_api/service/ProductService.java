@@ -127,7 +127,7 @@ public class ProductService {
             notificationService.createLowStockNotification(saved);
         }
 
-        return new ProductDTO(saved);
+        return buildProductDTO(saved);
     }
 
     // Update existing product
@@ -155,7 +155,7 @@ public class ProductService {
         } else {
             notificationService.resolveLowStockNotifications(updated.getId());
         }
-        return new ProductDTO(updated);
+        return buildProductDTO(updated);
     }
 
     // Delete product
