@@ -9,10 +9,16 @@ import com.saraprojects.product_api.model.Promotion;
 import com.saraprojects.product_api.repository.ProductRepository;
 import com.saraprojects.product_api.repository.PromotionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +26,47 @@ public class PromotionService {
 
     private final PromotionRepository repository;
     private final ProductRepository productRepository;
+
+    private Pageable buildPageable(int page, int size, String sortBy) {
+        try {
+            String[] sortParams = sortBy.split(",");
+            String sortField = sortParams[0];
+            Sort.Direction sortDirection = Sort.Direction.ASC;
+
+            if (sortParams.length > 1 && sortParams[1].equalsIgnoreCase("desc")) {
+                sortDirection = Sort.Direction.DESC;
+            }
+
+            return PageRequest.of(page, size, Sort.by(sortDirection, sortField));
+
+        } catch (Exception e) {
+            return PageRequest.of(page, size, Sort.by("startDate").descending());
+        }
+    }
+
+    private Map<String, Object> buildResponse(Page<Promotion> pagePromotions, String sortBy) {
+        List<PromotionDTO> promotions = pagePromotions.getContent()
+                .stream()
+                .map(PromotionDTO::new)
+                .toList();
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("promotions", promotions);
+        response.put("currentPage", pagePromotions.getNumber());
+        response.put("totalItems", pagePromotions.getTotalElements());
+        response.put("totalPages", pagePromotions.getTotalPages());
+        response.put("pageSize", pagePromotions.getSize());
+        response.put("sortBy", sortBy);
+
+        return response;
+    }
+
+    // Paginated list
+    public Map<String, Object> getPromotions(int page, int size, String sortBy) {
+        Pageable pageable = buildPageable(page, size, sortBy);
+        Page<Promotion> pagePromotions = repository.findAll(pageable);
+        return buildResponse(pagePromotions, sortBy);
+    }
 
     // Return all promotions
     public List<PromotionDTO> getAllPromotions() {
