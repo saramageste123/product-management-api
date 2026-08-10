@@ -368,8 +368,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.productService.getProductById(product.id!).subscribe({
       next: (response) => {
-        this.selectedProduct = response;
-        this.editableProduct = {...response};
+        const normalized = this.normalizeForEditing(response);
+        this.selectedProduct = normalized;
+        this.editableProduct = {...normalized};
         this.isDetailsOpen = true;
         this.isEditMode = false;
         this.mode = 'view';
@@ -381,8 +382,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   openProductById(productId: number): void {
     this.productService.getProductById(productId).subscribe({
       next: (product) => {
-        this.selectedProduct = product;
-        this.editableProduct = { ...product };
+        const normalized = this.normalizeForEditing(product);
+        this.selectedProduct = normalized;
+        this.editableProduct = { ...normalized};
         this.isDetailsOpen = true;
         this.isEditMode = false;
         this.mode = 'view';
@@ -441,6 +443,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   cancelExit() {
     this.showExitConfirm = false;
+  }
+
+  private normalizeForEditing(product: Product): Product {
+    const basePrice = product.originalPrice ?? product.price;
+    return { ...product, price: basePrice };
   }
 
   //Validations
@@ -515,8 +522,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.mode === 'create') {
       this.productService.createProduct(this.editableProduct).subscribe({
         next: (newProduct) => {
-          this.selectedProduct = newProduct;
-          this.editableProduct = { ...newProduct };
+          const normalized = this.normalizeForEditing(newProduct);
+          this.selectedProduct = normalized;
+          this.editableProduct = { ...normalized };
           this.isEditMode = false;
           this.triedSave = false;
           this.closeDetails();
@@ -528,8 +536,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else {
       this.productService.updateProduct(this.editableProduct).subscribe({
         next: (updatedProduct) => {
-          this.selectedProduct = updatedProduct;
-          this.editableProduct = { ...updatedProduct };
+          const normalized = this.normalizeForEditing(updatedProduct);
+          this.selectedProduct = normalized;
+          this.editableProduct = { ...normalized };
           this.isEditMode = false;
           this.triedSave = false;
           this.loadProductsWithFilters();

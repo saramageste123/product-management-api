@@ -46,18 +46,15 @@ export class ProductModalComponent implements OnChanges {
     if (changes['editableProduct']) {
       const price = this.editableProduct?.originalPrice ?? this.editableProduct?.price ?? 0;
       this.priceCents = Math.round(price * 100);
-      this.refreshPriceDisplay();
+      this.priceDisplay = this.formatFromCents(this.priceCents);
     }
   }
   
   isCodeInvalid(): boolean {
-
     const code = this.editableProduct?.code;
-
     if (!code) return false;
 
     const regex = /^\d{8,20}$/;
-
     return !regex.test(code);
   }
 
@@ -71,7 +68,7 @@ export class ProductModalComponent implements OnChanges {
       // Safety limit
       if (nextValue <= 99999999999) {
         this.priceCents = nextValue;
-        this.refreshPriceDisplay();
+        this.applyPriceChange();
       }
       return;
     }
@@ -79,7 +76,7 @@ export class ProductModalComponent implements OnChanges {
     if (event.key === 'Backspace') {
       event.preventDefault();
       this.priceCents = Math.floor(this.priceCents / 10);
-      this.refreshPriceDisplay();
+      this.applyPriceChange();
       return;
     }
 
@@ -100,13 +97,17 @@ export class ProductModalComponent implements OnChanges {
     });
   }
 
-  private refreshPriceDisplay(): void {
-    const value = this.priceCents / 100;
-
-    this.priceDisplay = value.toLocaleString('pt-BR', {
+  private formatFromCents(cents: number): string {
+    const value = cents / 100;
+    return value.toLocaleString('pt-BR', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
+  }
+
+  private applyPriceChange(): void {
+    const value = this.priceCents / 100;
+    this.priceDisplay = this.formatFromCents(this.priceCents);
 
     if (this.editableProduct) {
       this.editableProduct.price = value;
