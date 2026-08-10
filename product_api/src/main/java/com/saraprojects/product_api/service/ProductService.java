@@ -5,13 +5,14 @@ import com.saraprojects.product_api.enums.ProductStatus;
 import com.saraprojects.product_api.dto.ProductDTO;
 import com.saraprojects.product_api.model.Product;
 import com.saraprojects.product_api.repository.ProductRepository;
-import com.saraprojects.product_api.service.NotificationService;
 import com.saraprojects.product_api.specification.ProductSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +33,17 @@ public class ProductService {
         var promotion = promotionService.getActivePromotionForProduct(product);
 
         if (promotion != null) {
-            double discount = promotion.getDiscountPercentage().doubleValue() / 100;
-            double discountedPrice = product.getPrice() * (1 - discount);
+            BigDecimal discount = promotion.getDiscountPercentage()
+                    .divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+
+            BigDecimal discountedPrice = product.getPrice()
+                    .multiply(BigDecimal.ONE.subtract(discount))
+                    .setScale(2, RoundingMode.HALF_UP);
+
             dto.setPrice(discountedPrice);
             dto.setDiscountPercentage(promotion.getDiscountPercentage());
         } else {
-            dto.setPrice(product.getPrice());
+            dto.setPrice(product.getPrice().setScale(2, RoundingMode.HALF_UP));
             dto.setDiscountPercentage(null);
         }
         return dto;
@@ -113,6 +119,8 @@ public class ProductService {
         }
 
         Product product = dto.toEntity();
+        product.setPrice(product.getPrice().setScale(2, RoundingMode.HALF_UP));
+
         Product saved = repository.save(product);
 
         if (saved.getQuantity() < 10) {
@@ -133,7 +141,7 @@ public class ProductService {
 
         existing.setName(dto.getName());
         existing.setDescription(dto.getDescription());
-        existing.setPrice(dto.getPrice());
+        existing.setPrice(dto.getPrice().setScale(2, RoundingMode.HALF_UP));
         existing.setQuantity(dto.getQuantity());
         existing.setCategory(dto.getCategory());
         existing.setStatus(dto.getStatus());
@@ -147,7 +155,6 @@ public class ProductService {
         } else {
             notificationService.resolveLowStockNotifications(updated.getId());
         }
-
         return new ProductDTO(updated);
     }
 

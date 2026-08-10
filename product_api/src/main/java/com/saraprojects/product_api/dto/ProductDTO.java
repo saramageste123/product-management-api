@@ -23,9 +23,9 @@ public class ProductDTO {
 
     @NotNull
     @Positive
-    private Double price;
+    private BigDecimal price;
 
-    private Double originalPrice;
+    private BigDecimal originalPrice;
 
     private BigDecimal discountPercentage;
 
