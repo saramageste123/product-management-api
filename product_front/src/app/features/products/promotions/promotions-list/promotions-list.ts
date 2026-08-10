@@ -1,4 +1,4 @@
-import { Component, Input} from '@angular/core';
+import { Component, input, output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Promotion } from '../../models/promotion.model';
@@ -11,8 +11,20 @@ import { Promotion } from '../../models/promotion.model';
   styleUrl: './promotions-list.css'
 })
 export class PromotionsListComponent{
-  
-  @Input()
-  promotions: Promotion[] = [];
+
+  promotions = input<Promotion[]>([]);
+  currentPage = input<number>(0);
+  totalPages = input<number>(0);
+
+  previousPage = output<void>();
+  nextPage = output<void>();
+
+  get isFirstPage(): boolean {
+    return this.currentPage() <= 0;
+  }
+
+  get isLastPage(): boolean {
+    return this.currentPage() >= this.totalPages() - 1;
+  }
 
 }

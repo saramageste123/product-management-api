@@ -5,6 +5,8 @@ import lombok.*;
 import com.saraprojects.product_api.enums.ProductCategory;
 import com.saraprojects.product_api.enums.ProductStatus;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "products")
 @Data
@@ -22,8 +24,8 @@ public class Product {
 
     private String description;
 
-    @Column(nullable = false)
-    private Double price;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
 
     @Column(nullable = false)
     private Integer quantity;

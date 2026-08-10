@@ -33,7 +33,7 @@
   <!-- Body -->
   <div class="table-body">
 
-    <div class="table-row" *ngFor="let promotion of promotions">
+    <div class="table-row" *ngFor="let promotion of promotions()">
 
       <div class="promotion-column">{{ promotion.targetName }}</div>
 
@@ -52,11 +52,11 @@
   <!-- Pagination -->
   <div class="pagination">
 
-    <button>
+    <button [disabled]="isFirstPage" (click)="previousPage.emit()">
       <span class="material-symbols-rounded">chevron_left</span>
     </button>
 
-    <button>
+    <button [disabled]="isLastPage" (click)="nextPage.emit()">
       <span class="material-symbols-rounded">chevron_right</span>
     </button>
 

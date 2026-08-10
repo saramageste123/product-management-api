@@ -82,3 +82,8 @@
 .pagination button:hover {
   background: #787662;
 }
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

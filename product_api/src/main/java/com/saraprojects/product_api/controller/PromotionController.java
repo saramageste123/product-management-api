@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/promotions")
@@ -15,6 +16,16 @@ import java.util.List;
 public class PromotionController {
 
     private final PromotionService service;
+
+    // Paginated list
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getPromotions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "startDate,desc") String sortBy
+    ) {
+        return ResponseEntity.ok(service.getPromotions(page, size, sortBy));
+    }
 
     // Return all promotions
     @GetMapping("/all")
