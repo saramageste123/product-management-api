@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../models/product.model';
@@ -13,7 +13,7 @@ import { Output, EventEmitter } from '@angular/core';
   templateUrl: './product-modal.html',
   styleUrl: './product-modal.css',
 })
-export class ProductModalComponent {
+export class ProductModalComponent implements OnChanges {
 
   @Input() isDetailsOpen = false;
   @Input() editableProduct!: Product | null;
@@ -39,6 +39,16 @@ export class ProductModalComponent {
   ProductStatus = ProductStatus;
   ProductCategory = ProductCategory;
 
+  private priceCents = 0;
+  priceDisplay = '0,00';
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['editableProduct']) {
+      const price = this.editableProduct?.originalPrice ?? this.editableProduct?.price ?? 0;
+      this.priceCents = Math.round(price * 100);
+      this.refreshPriceDisplay();
+    }
+  }
   
   isCodeInvalid(): boolean {
 
@@ -49,6 +59,58 @@ export class ProductModalComponent {
     const regex = /^\d{8,20}$/;
 
     return !regex.test(code);
+  }
+
+  onPriceKeydown(event: KeyboardEvent): void {
+
+    if (event.key >= '0' && event.key <= '9') {
+      event.preventDefault();
+
+      const nextValue = this.priceCents * 10 + Number(event.key);
+
+      // Safety limit
+      if (nextValue <= 99999999999) {
+        this.priceCents = nextValue;
+        this.refreshPriceDisplay();
+      }
+      return;
+    }
+
+    if (event.key === 'Backspace') {
+      event.preventDefault();
+      this.priceCents = Math.floor(this.priceCents / 10);
+      this.refreshPriceDisplay();
+      return;
+    }
+
+    const allowedKeys = ['Tab', 'Shift', 'Escape', 'Enter'];
+    if (!allowedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  onPricePaste(event: ClipboardEvent): void {
+    event.preventDefault();
+  }
+
+  onPriceFocus(input: HTMLInputElement): void {
+    setTimeout(() => {
+      const length = input.value.length;
+      input.setSelectionRange(length, length);
+    });
+  }
+
+  private refreshPriceDisplay(): void {
+    const value = this.priceCents / 100;
+
+    this.priceDisplay = value.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    if (this.editableProduct) {
+      this.editableProduct.price = value;
+    }
   }
 
 }

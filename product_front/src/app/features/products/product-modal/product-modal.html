@@ -49,12 +49,17 @@
               </div>
 
               <input 
-              type="number"
-              [ngModel]="editableProduct?.originalPrice ?? editableProduct?.price"
-              (ngModelChange)="editableProduct!.price = $event" 
+              #priceInput
+              type="text"
+              inputmode="numeric"
+              [value]="priceDisplay"
+              (keydown)="onPriceKeydown($event)"
+              (paste)="onPricePaste($event)"
+              (focus)="onPriceFocus(priceInput)"
+              (click)="onPriceFocus(priceInput)"
               [class.input-error]="triedSave && !editableProduct?.price"
               [disabled]="!isEditMode"
-              step="any"/>
+              />
 
               <span class="error-message" *ngIf="triedSave && !editableProduct?.price"> This field is required! </span>
 
