@@ -45,7 +45,7 @@
   min-width: 100%;
   background: var(--dropdown-bg);
   border: 1px solid var(--dropdown-border);
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 6px;
   list-style: none;
   margin: 0;

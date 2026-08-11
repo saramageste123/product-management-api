@@ -8,10 +8,20 @@
       </button>
     </div>
 
+    <div class="sidebar-bottom">
+      <button class="action-icon" *ngIf="currentPage > 0" (click)="previousPage()">
+        <span class="material-symbols-rounded">keyboard_arrow_left</span>
+      </button>
+    </div>
+
   </aside>
 
   <div class="page-header">
     <h1>Notifications History</h1>
+  </div>
+  
+  <div class="page-description">
+    <p>Complete history of notifications (seen, unseen, resolved, and unresolved)</p>
   </div>
 
   <main class="notifications-content">
