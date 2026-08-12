@@ -188,11 +188,10 @@ public class PromotionService {
                 .orElseThrow(() ->
                         new RuntimeException("Promotion not found with ID: " + id));
 
-        if (promotion.getStatus() != PromotionStatus.FINISHED) {
+        if (promotion.getStatus() == PromotionStatus.ACTIVE) {
             throw new RuntimeException(
-                    "Only finished promotions can be deleted");
+                    "Active promotions cannot be deleted");
         }
-
         repository.deleteById(id);
     }
 
@@ -203,13 +202,12 @@ public class PromotionService {
 
         boolean hasInvalidPromotion = promotions.stream()
                 .anyMatch(p ->
-                        p.getStatus() != PromotionStatus.FINISHED);
+                        p.getStatus() == PromotionStatus.ACTIVE);
 
         if (hasInvalidPromotion) {
             throw new RuntimeException(
-                    "Only finished promotions can be deleted");
+                    "Active promotions cannot be deleted");
         }
-
         repository.deleteAllById(ids);
     }
 
