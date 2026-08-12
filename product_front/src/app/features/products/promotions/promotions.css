@@ -100,3 +100,12 @@
   filter: blur(4px);
   pointer-events: none;
 }
+
+.clean-filter-btn {
+  background: #787662;
+}
+
+.clean-filter-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

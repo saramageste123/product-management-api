@@ -20,6 +20,10 @@
         Delete finished
       </button>
 
+      <button class="action-icon clean-filter-btn" [disabled]="!hasActiveFilters()" (click)="clearFilters()">
+        <span class="material-symbols-rounded">filter_list_off</span>
+      </button>
+
       <button class="action-icon add-btn" (click)="openCreateModal()">
         <span class="material-symbols-rounded">add</span>
       </button>
@@ -31,8 +35,16 @@
         [promotions]="promotions()"
         [currentPage]="currentPage()"
         [totalPages]="totalPages()"
+        [targetTypeFilter]="targetTypeFilter()"
+        [startDateFilter]="startDateFilter()"
+        [endDateFilter]="endDateFilter()"
+        [statusFilter]="statusFilter()"
         (previousPage)="previousPage()"
         (nextPage)="nextPage()"
+        (targetTypeFilterChange)="setTargetTypeFilter($event)"
+        (startDateFilterChange)="setStartDateFilter($event)"
+        (endDateFilterChange)="setEndDateFilter($event)"
+        (statusFilterChange)="setStatusFilter($event)"
       ></app-promotions-list>
     </div>
     

@@ -3,29 +3,82 @@
   <!-- Header -->
   <div class="table-header">
 
-    <div class="promotion-column">
-      PRODUCTS
-      <span class="material-symbols-rounded">keyboard_arrow_down</span>
+    <div class="promotion-column has-filter">
+      {{ targetTypeLabel() }}
+      <button type="button" class="filter-toggle-btn" (click)="toggleTargetTypeMenu()">
+        <span class="material-symbols-rounded">keyboard_arrow_down</span>
+      </button>
+      
+      @if (isTargetTypeMenuOpen()) {
+        <ul class="filter-menu">
+          @for (option of targetTypeOptions; track option.id) {
+            <li
+              class="filter-menu-option"
+              [class.selected]="option.id === (targetTypeFilter() ?? 'ALL')"
+              (click)="selectTargetType(option.id)"
+            >
+              {{ option.label }}
+            </li>
+          }
+        </ul>
+      }
     </div>
 
     <div class="discount-column">
       DISCOUNT
-      <span class="material-symbols-rounded">keyboard_arrow_down</span>
     </div>
 
-    <div class="start-column">
+    <div class="start-column has-filter">
       START DATE
-      <span class="material-symbols-rounded">keyboard_arrow_down</span>
+      <button type="button" class="filter-toggle-btn" (click)="toggleStartCalendar()">
+        <span class="material-symbols-rounded">keyboard_arrow_down</span>
+      </button>
+
+      @if (isStartCalendarOpen()) {
+        <div class="filter-calendar-popover">
+          <app-calendar
+            [selectedDate]="startDateFilter()"
+            (dateSelected)="onStartDateSelected($event)"
+          ></app-calendar>
+        </div>
+      }
     </div>
 
-    <div class="end-column">
+    <div class="end-column has-filter">
       END DATE
-      <span class="material-symbols-rounded">keyboard_arrow_down</span>
+      <button type="button" class="filter-toggle-btn" (click)="toggleEndCalendar()">
+        <span class="material-symbols-rounded">keyboard_arrow_down</span>
+      </button>
+
+      @if (isEndCalendarOpen()) {
+        <div class="filter-calendar-popover">
+          <app-calendar
+            [selectedDate]="endDateFilter()"
+            (dateSelected)="onEndDateSelected($event)"
+          ></app-calendar>
+        </div>
+      }
     </div>
 
-    <div class="status-column">
+    <div class="status-column has-filter">
       STATUS
-      <span class="material-symbols-rounded">keyboard_arrow_down</span>
+      <button type="button" class="filter-toggle-btn" (click)="toggleStatusMenu()">
+        <span class="material-symbols-rounded">keyboard_arrow_down</span>
+      </button>
+
+      @if (isStatusMenuOpen()) {
+        <ul class="filter-menu">
+          @for (option of statusOptions; track option.id) {
+            <li
+              class="filter-menu-option"
+              [class.selected]="option.id === statusFilter()"
+              (click)="selectStatus(option.id)"
+            >
+              {{ option.label }}
+            </li>
+          }
+        </ul>
+      }
     </div>
 
   </div>
@@ -46,6 +99,10 @@
       <div class="status-column">{{ promotion.status }}</div>
 
     </div>
+
+    @if (promotions().length === 0) {
+      <p class="empty-state">No promotions found.</p>
+    }
 
   </div>
 
