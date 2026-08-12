@@ -75,6 +75,8 @@ This organization ensures:
 * Maven
 
 ## 📌 Endpoints
+
+### Products
 ```
 POST /api/products                    → Create product
 PUT /api/products/id/{id}             → Update product
@@ -83,18 +85,32 @@ DELETE /api/products/bulk-delete      → Delete selected products
 GET /api/products/id/{id}             → Get product by ID
 GET /api/products                     → Get products with search, filters, pagination and sorting
 GET /api/products/all                 → Get all products
-
-POST /api/promotions                  → Create promotion
-GET /api/promotions                   → Get all promotions
-GET /api/promotions/{id}              → Get promotion by ID
-DELETE /api/promotions/{id}           → Delete finished promotion
-DELETE /api/promotions/bulk-delete    → Delete selected finished promotions
-
-GET /notifications                    → Get notifications
-PUT /notifications/{id}/read          → Mark notification as read
-GET /notifications/unread/count       → Count unread notifications
-
 ```
+### Promotions
+```
+POST /api/promotions                  → Create promotion
+GET /api/promotions                   → Get promotions with pagination, sorting and filters (targetType, startDate, endDate, status)
+GET /api/promotions/all               → Get all promotions (no pagination)
+GET /api/promotions/id/{id}           → Get promotion by ID
+DELETE /api/promotions/id/{id}        → Delete a scheduled or finished promotion
+DELETE /api/promotions/bulk-delete    → Delete selected scheduled or finished promotions
+```
+### Notifications
+```
+GET /notifications                    → Get all notifications
+PUT /notifications/{id}/read          → Mark notification as read
+PUT /notifications/mark-all-read      → Mark all notifications as read
+GET /notifications/unread/count       → Count unread notifications
+GET /notifications/history            → Get notification history
+DELETE /notifications/history         → Clear notification history
+```
+## 🔁 Promotion Business Rules
+
+* A promotion can target either a specific product or a whole category (mutually exclusive)
+* Overlapping promotions for the same product or category are not allowed
+* Promotion status (SCHEDULED, ACTIVE, FINISHED) is calculated based on the current date and
+  kept in sync via a scheduled background job
+* Active promotions cannot be deleted, individually or in bulk
 
 ## ✅ Data Validation
 
@@ -164,8 +180,6 @@ http://localhost:8080
 ```
 
 ## 📈 Next Steps (Future Improvements)
-
-📊 Applying promotion management
 
 🔐 Implement authentication and authorization using Spring Security + JWT
 
