@@ -27,6 +27,9 @@ export class PromotionsListComponent{
   endDateFilter = input<Date | null>(null);
   statusFilter = input<StatusFilter>(null);
 
+  isDeleteMode = input<boolean>(false);
+  selectedIds = input<number[]>([]);
+
   previousPage = output<void>();
   nextPage = output<void>();
 
@@ -34,6 +37,8 @@ export class PromotionsListComponent{
   startDateFilterChange = output<Date | null>();
   endDateFilterChange = output<Date | null>();
   statusFilterChange = output<StatusFilter>();
+
+  promotionToggle = output<Promotion>();
 
   // UI state (open/closed)
   isTargetTypeMenuOpen = signal(false);
@@ -124,4 +129,20 @@ export class PromotionsListComponent{
     }
   }
 
+  // Delete mode
+  isPromotionSelected(id?: number): boolean {
+    if (!id) return false;
+    return this.selectedIds().includes(id);
+  }
+
+  isPromotionSelectable(promotion: Promotion): boolean {
+    return promotion.status !== 'ACTIVE';
+  }
+
+  onRowClick(promotion: Promotion): void {
+    if (!this.isDeleteMode()) return;
+    if (!this.isPromotionSelectable(promotion)) return;
+    this.promotionToggle.emit(promotion);
+  }
+  
 }

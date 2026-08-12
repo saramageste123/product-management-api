@@ -157,3 +157,16 @@
   color: #787662;
   font-size: 14px;
 }
+
+.table-row.delete-mode {
+  cursor: pointer;
+}
+
+.table-row.selected {
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
+}
+
+.table-row.not-selectable {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

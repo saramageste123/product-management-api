@@ -1,4 +1,4 @@
-<div class="promotions-page" [class.blurred]="showModal()">
+<div class="promotions-page" [class.blurred]="showModal() || showBulkDeleteConfirm()">
 
   <aside class="sidebar left">
 
@@ -16,8 +16,8 @@
 
   <div class="actions-bar">
 
-      <button class="delete-finished-btn" disabled>
-        Delete finished
+      <button class="delete-promotions-btn" (click)="toggleDeleteMode()">
+        {{ isDeleteMode() ? 'Cancel' : 'Delete promotions' }}
       </button>
 
       <button class="action-icon clean-filter-btn" [disabled]="!hasActiveFilters()" (click)="clearFilters()">
@@ -30,6 +30,24 @@
 
     </div>
 
+    <div class="delete-toolbar" *ngIf="isDeleteMode()">
+      <span class="delete-message">
+        SELECT THE PROMOTIONS YOU WANT TO REMOVE
+      </span>
+      <div class="delete-right">
+        <span class="selected-count">
+          {{ selectedPromotions().length }} selected
+        </span>
+        <button
+          class="delete-products-btn"
+          [disabled]="selectedPromotions().length === 0"
+          (click)="deleteSelectedPromotions()"
+        >
+          Delete promotions
+        </button>
+      </div>
+    </div>
+
     <div class="promotions-list">
       <app-promotions-list
         [promotions]="promotions()"
@@ -39,12 +57,15 @@
         [startDateFilter]="startDateFilter()"
         [endDateFilter]="endDateFilter()"
         [statusFilter]="statusFilter()"
+        [isDeleteMode]="isDeleteMode()"
+        [selectedIds]="selectedPromotions()"
         (previousPage)="previousPage()"
         (nextPage)="nextPage()"
         (targetTypeFilterChange)="setTargetTypeFilter($event)"
         (startDateFilterChange)="setStartDateFilter($event)"
         (endDateFilterChange)="setEndDateFilter($event)"
         (statusFilterChange)="setStatusFilter($event)"
+        (promotionToggle)="togglePromotionSelection($event)"
       ></app-promotions-list>
     </div>
     
@@ -58,3 +79,12 @@
     (save)="onCreatePromotion($event)"
   ></app-promotion-form-modal>
 }
+
+<app-confirmation-modal
+  [isOpen]="showBulkDeleteConfirm()"
+  [title]="'Delete promotions'"
+  [message]="'These promotions will be permanently removed. Are you sure?'"
+  [confirmText]="'Delete'"
+  (confirm)="confirmBulkDelete()"
+  (cancel)="cancelBulkDelete()"
+></app-confirmation-modal>

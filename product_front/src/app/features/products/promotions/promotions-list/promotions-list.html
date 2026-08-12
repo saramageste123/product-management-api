@@ -86,7 +86,12 @@
   <!-- Body -->
   <div class="table-body">
 
-    <div class="table-row" *ngFor="let promotion of promotions()">
+    <div class="table-row" 
+    *ngFor="let promotion of promotions()"
+    [class.delete-mode]="isDeleteMode()"
+    [class.selected]="isPromotionSelected(promotion.id)"
+    [class.not-selectable]="isDeleteMode() && !isPromotionSelectable(promotion)"
+    (click)="onRowClick(promotion)">
 
       <div class="promotion-column">{{ promotion.targetName }}</div>
 

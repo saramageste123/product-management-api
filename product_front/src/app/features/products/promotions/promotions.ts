@@ -7,6 +7,7 @@ import { PromotionCreateRequest } from '../models/promotion-create.model';
 import { PromotionService } from '../service/promotion.service';
 import { PromotionsListComponent } from './promotions-list/promotions-list';
 import { PromotionFormModalComponent } from './promotion-form-modal/promotion-form-modal';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal';
 import { ToastService } from '../service/toast.service';
 
 type TargetTypeFilter = 'PRODUCT' | 'CATEGORY' | null;
@@ -15,7 +16,7 @@ type StatusFilter = 'SCHEDULED' | 'ACTIVE' | 'FINISHED' | null;
 @Component({
   selector: 'app-promotions',
   standalone: true,
-  imports: [CommonModule, PromotionsListComponent, PromotionFormModalComponent],
+  imports: [CommonModule, PromotionsListComponent, PromotionFormModalComponent, ConfirmationModalComponent],
   templateUrl: './promotions.html',
   styleUrl: './promotions.css'
 })
@@ -43,6 +44,11 @@ export class PromotionsComponent implements OnInit {
   hasActiveFilters = computed(() =>
     !!this.targetTypeFilter() || !!this.startDateFilter() || !!this.endDateFilter() || !!this.statusFilter()
   );
+
+  // Delete mode
+  isDeleteMode = signal(false);
+  selectedPromotions = signal<number[]>([]);
+  showBulkDeleteConfirm = signal(false);
 
   constructor(
     private router: Router,
@@ -163,4 +169,57 @@ export class PromotionsComponent implements OnInit {
       }
     });
   }
+
+  // Delete mode
+  toggleDeleteMode(): void {
+    this.isDeleteMode.update(value => !value);
+
+    if (!this.isDeleteMode()) {
+      this.selectedPromotions.set([]);
+    }
+  }
+
+  togglePromotionSelection(promotion: Promotion): void {
+    if (!promotion.id || promotion.status === 'ACTIVE') return;
+
+    this.selectedPromotions.update(current => {
+      const index = current.indexOf(promotion.id!);
+      if (index > -1) {
+        return current.filter(id => id !== promotion.id);
+      }
+      return [...current, promotion.id!];
+    });
+  }
+
+  isPromotionSelected(id?: number): boolean {
+    if (!id) return false;
+    return this.selectedPromotions().includes(id);
+  }
+
+  deleteSelectedPromotions(): void {
+    if (this.selectedPromotions().length === 0) return;
+    this.showBulkDeleteConfirm.set(true);
+  }
+
+  confirmBulkDelete(): void {
+    this.promotionService.deletePromotions(this.selectedPromotions()).subscribe({
+      next: () => {
+        this.showBulkDeleteConfirm.set(false);
+        this.selectedPromotions.set([]);
+        this.isDeleteMode.set(false);
+        this.currentPage.set(0);
+        this.loadPromotions();
+        this.toastService.show('Promotions removed successfully!');
+      },
+      error: (err) => {
+        this.showBulkDeleteConfirm.set(false);
+        this.toastService.show(err?.error?.message ?? 'Error deleting promotions.', 'error');
+      }
+    });
+  }
+
+  cancelBulkDelete(): void {
+    this.showBulkDeleteConfirm.set(false);
+  }
+  
 }
