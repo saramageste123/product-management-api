@@ -154,10 +154,6 @@ http://localhost:4200
 
 ## 📈 Next steps
 
-📊 Applying promotion management
-
-📝 Implement promotions module
-
 🔐 Implement authentication and authorization (JWT)
 
 🧪Add unit and integration tests
