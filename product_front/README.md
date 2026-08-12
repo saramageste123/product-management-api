@@ -150,10 +150,6 @@ http://localhost:4200
 
 ## 📈 Next Steps (Future Improvements)
 
-📊 Applying promotion management
-
-📝 Implement promotions
-
 🔐 Implement authentication and authorization on the frontend
 
 🧪 Expand unit test coverage
