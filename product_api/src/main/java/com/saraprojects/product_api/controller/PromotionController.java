@@ -2,11 +2,15 @@ package com.saraprojects.product_api.controller;
 
 import com.saraprojects.product_api.dto.PromotionCreateDTO;
 import com.saraprojects.product_api.dto.PromotionDTO;
+import com.saraprojects.product_api.enums.PromotionStatus;
+import com.saraprojects.product_api.enums.PromotionTargetType;
 import com.saraprojects.product_api.service.PromotionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -17,14 +21,18 @@ public class PromotionController {
 
     private final PromotionService service;
 
-    // Paginated list
+    // Paginated + filtered list
     @GetMapping
     public ResponseEntity<Map<String, Object>> getPromotions(
+            @RequestParam(required = false) PromotionTargetType targetType,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) PromotionStatus status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "startDate,desc") String sortBy
     ) {
-        return ResponseEntity.ok(service.getPromotions(page, size, sortBy));
+        return ResponseEntity.ok(service.getPromotions(targetType, startDate, endDate, status, page, size, sortBy));
     }
 
     // Return all promotions

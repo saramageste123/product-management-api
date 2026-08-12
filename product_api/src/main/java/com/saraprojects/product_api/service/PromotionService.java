@@ -8,14 +8,17 @@ import com.saraprojects.product_api.model.Product;
 import com.saraprojects.product_api.model.Promotion;
 import com.saraprojects.product_api.repository.ProductRepository;
 import com.saraprojects.product_api.repository.PromotionRepository;
+import com.saraprojects.product_api.specification.PromotionSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,10 +64,18 @@ public class PromotionService {
         return response;
     }
 
-    // Paginated list
-    public Map<String, Object> getPromotions(int page, int size, String sortBy) {
+    // Paginated + filtered list
+    public Map<String, Object> getPromotions(
+            PromotionTargetType targetType,
+            LocalDate startDate,
+            LocalDate endDate,
+            PromotionStatus status,
+            int page,
+            int size,
+            String sortBy) {
         Pageable pageable = buildPageable(page, size, sortBy);
-        Page<Promotion> pagePromotions = repository.findAll(pageable);
+        Specification<Promotion> spec = PromotionSpecification.filter(targetType, startDate, endDate, status);
+        Page<Promotion> pagePromotions = repository.findAll(spec, pageable);
         return buildResponse(pagePromotions, sortBy);
     }
 

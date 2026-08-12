@@ -3,14 +3,14 @@ package com.saraprojects.product_api.repository;
 import com.saraprojects.product_api.enums.ProductCategory;
 import com.saraprojects.product_api.model.Promotion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.time.LocalDateTime;
-import java.util.List;
 
-public interface PromotionRepository extends JpaRepository<Promotion, Long> {
+public interface PromotionRepository extends JpaRepository<Promotion, Long>, JpaSpecificationExecutor<Promotion> {
     List<Promotion> findByProductId(Long productId);
     List<Promotion> findByCategory(ProductCategory category);
 
