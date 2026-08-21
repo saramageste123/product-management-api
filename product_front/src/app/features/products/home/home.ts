@@ -316,12 +316,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   openProductFromNotification(productId: number): void {
 
-    const product = this.products.find(
-        p => p.id === productId
-    );
+    const product = this.products.find(p => p.id === productId);
 
-    if (!product) return;
-    this.handleProductClick(product);
+     if (product) {
+      this.handleProductClick(product);
+      return;
+    }
+
+    this.openProductById(productId);
   }
 
   private listenForProductNavigation(): void {
