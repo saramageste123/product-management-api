@@ -29,6 +29,7 @@ public class PromotionService {
 
     private final PromotionRepository repository;
     private final ProductRepository productRepository;
+    private final NotificationService notificationService;
 
     private Pageable buildPageable(int page, int size, String sortBy) {
         try {
@@ -144,7 +145,12 @@ public class PromotionService {
 
         Promotion saved = repository.save(promotion);
 
+        checkImmediateNotification(saved);
         return new PromotionDTO(saved);
+    }
+
+    private void checkImmediateNotification(Promotion promotion) {
+        notificationService.checkPromotionNotifications(promotion);
     }
 
     //Validation Promotion

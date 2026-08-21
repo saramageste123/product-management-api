@@ -1,5 +1,6 @@
 package com.saraprojects.product_api.repository;
 
+import com.saraprojects.product_api.enums.NotificationType;
 import com.saraprojects.product_api.model.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
@@ -9,5 +10,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByProductIdAndResolvedFalse(Long productId);
     List<Notification> findAllByReadFalse();
     Optional<Notification> findFirstByProductIdAndResolvedFalse(Long productId);
+    Optional<Notification> findFirstByPromotionIdAndType(Long promotionId, NotificationType type);
     long countByReadFalse();
 }

@@ -2,6 +2,7 @@ package com.saraprojects.product_api.scheduler;
 
 import com.saraprojects.product_api.model.Promotion;
 import com.saraprojects.product_api.repository.PromotionRepository;
+import com.saraprojects.product_api.service.NotificationService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,15 +15,20 @@ import java.util.List;
 public class PromotionStatusScheduler {
 
     private final PromotionRepository repository;
+    private final NotificationService notificationService;
 
-    // Corrige status assim que a aplicação sobe (cobre dados antigos/dessincronizados)
     @PostConstruct
     public void onStartup() {
         refreshPromotionStatuses();
+        checkUpcomingPromotionEvents();
     }
 
-    // Mantém sincronizado continuamente enquanto a aplicação roda
     @Scheduled(fixedRate = 60_000)
+    public void runScheduledTasks() {
+        refreshPromotionStatuses();
+        checkUpcomingPromotionEvents();
+    }
+
     public void refreshPromotionStatuses() {
 
         List<Promotion> promotions = repository.findAll();
@@ -36,4 +42,14 @@ public class PromotionStatusScheduler {
             repository.saveAll(toUpdate);
         }
     }
+
+    public void checkUpcomingPromotionEvents() {
+
+        List<Promotion> promotions = repository.findAll();
+
+        for (Promotion promotion : promotions) {
+            notificationService.checkPromotionNotifications(promotion);
+        }
+    }
+
 }

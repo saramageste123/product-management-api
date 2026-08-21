@@ -33,6 +33,8 @@ public class Notification {
 
     private Long productId;
 
+    private Long promotionId;
+
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
