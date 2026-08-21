@@ -22,7 +22,7 @@
 
       <button class="menu-btn" (click)="toggleNotifications()">
         Notifications
-        <div class="notification-dot menu-notification-dot" *ngIf="hasUnreadNotifications"></div>
+        <div class="notification-dot menu-notification-dot" *ngIf="hasUnreadNotifications()"></div>
       </button>
 
       <button class="menu-btn" (click)="togglePromotions()">

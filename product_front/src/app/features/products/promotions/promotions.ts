@@ -9,6 +9,7 @@ import { PromotionsListComponent } from './promotions-list/promotions-list';
 import { PromotionFormModalComponent } from './promotion-form-modal/promotion-form-modal';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal';
 import { ToastService } from '../service/toast.service';
+import { NotificationService } from '../service/notification.service';
 
 type TargetTypeFilter = 'PRODUCT' | 'CATEGORY' | null;
 type StatusFilter = 'SCHEDULED' | 'ACTIVE' | 'FINISHED' | null;
@@ -53,7 +54,8 @@ export class PromotionsComponent implements OnInit {
   constructor(
     private router: Router,
     private promotionService: PromotionService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -162,6 +164,7 @@ export class PromotionsComponent implements OnInit {
         this.currentPage.set(0);
         this.loadPromotions();
         this.toastService.show('Promotion created successfully!');
+        this.notificationService.notifyNotificationsUpdated();
       },
       error: (err) => {
         this.creatingPromotion.set(false);

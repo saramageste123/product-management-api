@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, HostListener, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -42,7 +42,8 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   isAboutOpen = false;
   isNotificationsOpen = false;
   notificationsEnabled = true;
-  hasUnreadNotifications = false;
+
+  hasUnreadNotifications = signal (false);
 
   selectedNotification: Notification | null = null;
   isNotificationDetailsModalOpen = false;
@@ -67,14 +68,16 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   refreshUnreadState(): void {
     this.notificationService.getNotifications().subscribe({
       next: (data) => {
-        this.hasUnreadNotifications = data.some(n => !n.read);
+        const unread = data.some(n => !n.read);
+        this.hasUnreadNotifications.set(unread);
+        this.unreadStateChange.emit(unread);
       },
       error: (err) => console.error('Error loading notifications', err)
     });
   }
 
   onNotificationsStateChange(hasUnread: boolean): void {
-    this.hasUnreadNotifications = hasUnread;
+    this.hasUnreadNotifications.set(hasUnread);
     this.unreadStateChange.emit(hasUnread);
   }
 
