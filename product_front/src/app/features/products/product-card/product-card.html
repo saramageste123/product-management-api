@@ -6,6 +6,13 @@
   [class.selected]="isSelected"
 >
 
+  <div class="discount-wrapper" *ngIf="product.discountPercentage">
+    <span class="discount-tape"></span>
+    <div class="discount-sticker">
+      <span class="discount-text">{{ product.discountPercentage }}%<br>off</span>
+    </div>
+  </div>
+
   <div
     class="product-image"
     [ngStyle]="{
