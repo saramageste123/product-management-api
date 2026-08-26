@@ -1,0 +1,67 @@
+<div class="login-page" [ngClass]="stateClass()">
+
+  <div class="login-header">
+    <h1>Welcome,</h1>
+    <p>let's get signed in!</p>
+  </div>
+
+  <form class="login-form" (ngSubmit)="submit()">
+
+    <div class="login-fields">
+
+      <input
+        type="text"
+        placeholder="Username"
+        [ngModel]="username()"
+        (ngModelChange)="onUsernameChange($event)"
+        name="username"
+        [disabled]="isLocked() || submitting()"
+        autocomplete="username"
+      />
+
+      <div class="field-divider"></div>
+
+      <input
+        type="password"
+        placeholder="Password"
+        [ngModel]="password()"
+        (ngModelChange)="password.set($event)"
+        name="password"
+        [disabled]="isLocked() || submitting()"
+        autocomplete="current-password"
+      />
+
+    </div>
+
+    <button
+      type="submit"
+      class="submit-btn"
+      [disabled]="isLocked() || submitting()"
+    >
+      <span class="material-symbols-rounded">arrow_forward</span>
+    </button>
+
+    @if (errorMessage()) {
+      <p class="error-message">{{ errorMessage() }}</p>
+    }
+
+    <div class="login-links">
+      <a href="javascript:void(0)">Forgot your password?</a>
+      <a href="javascript:void(0)">Create account</a>
+    </div>
+
+  </form>
+
+  <div class="fruit-stage">
+    @if (isAnimating() && previousFruit()) {
+      <img class="fruit-image roll-out" [src]="fruitImage(previousFruit()!)" alt="" />
+    }
+    <img
+      class="fruit-image"
+      [class.roll-in]="isAnimating()"
+      [src]="fruitImage(currentFruit())"
+      alt=""
+    />
+  </div>
+
+</div>
