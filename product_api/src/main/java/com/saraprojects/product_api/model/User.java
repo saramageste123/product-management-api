@@ -3,6 +3,8 @@ package com.saraprojects.product_api.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -14,15 +16,25 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique=true)
-    private String username;
+    @Column(nullable = false)
+    private String name;
 
     @Column(nullable = false, unique=true)
     private String email;
 
+    @Column(nullable = false, unique = true)
+    private String employeeCode;
+
     @Column(nullable = false)
     private String password;
 
-    // Saves roles as CSV for simplicity: "ROLE_USER,ROLE_ADMIN"
-    private String roles;
+    @Column(nullable = false)
+    private Integer avatarId;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private int failedAttempts = 0;
+
+    private LocalDateTime lockedUntil;
+
 }
