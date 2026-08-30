@@ -2,14 +2,14 @@ import { Component, signal, computed, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { AuthService } from '../service/auth.service';
 
 type Fruit = 'banana' | 'orange' | 'apple';
 
-interface LockState {
-  unlockAt: number; // timestamp em ms
-}
+const MAX_ATTEMPTS = 3;
+const ANIMATION_DURATION_MS = 650;
 
 @Component({
   selector: 'app-login',
@@ -20,23 +20,16 @@ interface LockState {
 })
 export class LoginComponent implements OnDestroy {
 
-  private readonly MAX_ATTEMPTS = 3;
-  private readonly LOCK_DURATION_MS = 60_000; // 1 minuto para testes — trocar para 5 min (300_000) antes do deploy final
-  private readonly ANIMATION_DURATION_MS = 650;
-
-  username = signal('');
+  employeeCode = signal('');
   password = signal('');
 
-  attempts = signal(0);
   currentFruit = signal<Fruit>('banana');
   previousFruit = signal<Fruit | null>(null);
   isAnimating = signal(false);
 
   errorMessage = signal('');
   submitting = signal(false);
-
   isLocked = signal(false);
-  lockRemainingSeconds = signal(0);
 
   private lockIntervalId?: ReturnType<typeof setInterval>;
   private animationTimeoutId?: ReturnType<typeof setTimeout>;
@@ -57,26 +50,14 @@ export class LoginComponent implements OnDestroy {
     return `images/login/${fruit}.png`;
   }
 
-  onUsernameChange(value: string): void {
-    this.username.set(value);
-    this.checkExistingLock();
-  }
-
-  private checkExistingLock(): void {
-    const lock = this.readLock();
-
-    if (lock && lock.unlockAt > Date.now()) {
-      this.startLockCountdown(lock.unlockAt);
-    }
-  }
 
   submit(): void {
     if (this.isLocked() || this.submitting()) return;
 
-    const user = this.username().trim();
+    const code = this.employeeCode().trim();
     const pass = this.password();
 
-    if (!user || !pass) {
+    if (!code || !pass) {
       this.errorMessage.set('Please fill in all fields.');
       return;
     }
@@ -84,32 +65,37 @@ export class LoginComponent implements OnDestroy {
     this.submitting.set(true);
     this.errorMessage.set('');
 
-    this.authService.login(user, pass).subscribe({
+    this.authService.login(code, pass).subscribe({
       next: () => {
         this.submitting.set(false);
-        this.clearLock();
         this.router.navigate(['/']);
       },
-      error: () => {
+      error: (err: HttpErrorResponse) => {
         this.submitting.set(false);
-        this.registerFailedAttempt();
+        this.handleLoginError(err);
       }
     });
   }
 
-  private registerFailedAttempt(): void {
-    const nextAttempts = this.attempts() + 1;
-    this.attempts.set(nextAttempts);
+  private handleLoginError(err: HttpErrorResponse): void {
+    const message: string = err.error?.message ?? 'Something went wrong. Please try again.';
 
-    if (nextAttempts >= this.MAX_ATTEMPTS) {
-      const unlockAt = Date.now() + this.LOCK_DURATION_MS;
-      this.saveLock(unlockAt);
-      this.startLockCountdown(unlockAt);
+    if (err.status === 423) {
+      this.errorMessage.set(message);
+      this.transitionFruit('apple');
+      this.startLockCountdown(message);
       return;
     }
 
-    this.errorMessage.set('Incorrect username or password. Please check your information and try again.');
-    this.transitionFruit(nextAttempts === 1 ? 'orange' : 'apple');
+    this.errorMessage.set(message);
+
+    const remainingMatch = message.match(/(\d+)\s+attempt\(s\)\s+remaining/i);
+
+    if (remainingMatch) {
+      const remaining = Number(remainingMatch[1]);
+      const attemptsUsed = MAX_ATTEMPTS - remaining;
+      this.transitionFruit(attemptsUsed >= 2 ? 'apple' : 'orange');
+    }
   }
 
   private transitionFruit(target: Fruit): void {
@@ -124,29 +110,46 @@ export class LoginComponent implements OnDestroy {
     this.animationTimeoutId = setTimeout(() => {
       this.isAnimating.set(false);
       this.previousFruit.set(null);
-    }, this.ANIMATION_DURATION_MS);
+    }, ANIMATION_DURATION_MS);
   }
 
-  private startLockCountdown(unlockAt: number): void {
+  private startLockCountdown(message: string): void {
     this.isLocked.set(true);
-    this.transitionFruit('apple');
+
+    const totalSeconds = this.parseRemainingSeconds(message);
 
     if (this.lockIntervalId) clearInterval(this.lockIntervalId);
 
-    const updateRemaining = () => {
-      const remainingMs = unlockAt - Date.now();
+    if (totalSeconds == null) {
+      return;
+    }
 
-      if (remainingMs <= 0) {
+    let remaining = totalSeconds;
+
+    this.lockIntervalId = setInterval(() => {
+      remaining -= 1;
+
+      if (remaining <= 0) {
         this.unlockAccount();
         return;
       }
 
-      this.lockRemainingSeconds.set(Math.ceil(remainingMs / 1000));
-      this.errorMessage.set(this.buildLockMessage(this.lockRemainingSeconds()));
-    };
+      this.errorMessage.set(this.buildLockMessage(remaining));
+    }, 1000);
+  }
 
-    updateRemaining();
-    this.lockIntervalId = setInterval(updateRemaining, 1000);
+  private parseRemainingSeconds(message: string): number | null {
+    const withMinutes = message.match(/(\d+)m\s+(\d+)s/);
+    if (withMinutes) {
+      return Number(withMinutes[1]) * 60 + Number(withMinutes[2]);
+    }
+
+    const onlySeconds = message.match(/(\d+)s/);
+    if (onlySeconds) {
+      return Number(onlySeconds[1]);
+    }
+
+    return null;
   }
 
   private buildLockMessage(seconds: number): string {
@@ -164,40 +167,8 @@ export class LoginComponent implements OnDestroy {
     if (this.lockIntervalId) clearInterval(this.lockIntervalId);
 
     this.isLocked.set(false);
-    this.lockRemainingSeconds.set(0);
-    this.attempts.set(0);
     this.errorMessage.set('');
     this.transitionFruit('banana');
-    this.clearLock();
   }
 
-  // Persistência local do bloqueio (sobrevive a reload da página)
-  // ⚠️ Isso é só uma conveniência de UX — a validação de verdade
-  // precisa acontecer no backend quando o JWT existir.
-  private lockKey(): string {
-    return `login_lock_${this.username().trim().toLowerCase()}`;
-  }
-
-  private saveLock(unlockAt: number): void {
-    const key = this.lockKey();
-    if (!key.endsWith('_')) {
-      localStorage.setItem(key, JSON.stringify({ unlockAt } as LockState));
-    }
-  }
-
-  private readLock(): LockState | null {
-    const key = this.lockKey();
-    const raw = localStorage.getItem(key);
-    if (!raw) return null;
-
-    try {
-      return JSON.parse(raw) as LockState;
-    } catch {
-      return null;
-    }
-  }
-
-  private clearLock(): void {
-    localStorage.removeItem(this.lockKey());
-  }
 }

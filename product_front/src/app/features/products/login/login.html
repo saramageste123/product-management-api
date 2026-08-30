@@ -11,10 +11,10 @@
 
       <input
         type="text"
-        placeholder="Username"
-        [ngModel]="username()"
-        (ngModelChange)="onUsernameChange($event)"
-        name="username"
+        placeholder="Employee Code"
+        [ngModel]="employeeCode()"
+        (ngModelChange)="employeeCode.set($event)"
+        name="employeeCode"
         [disabled]="isLocked() || submitting()"
         autocomplete="username"
       />

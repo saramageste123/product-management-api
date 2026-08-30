@@ -122,38 +122,6 @@
   position: relative;
 }
 
-/* Coming soon badge */
-.coming-soon-badge {
-  position: absolute;
-
-  right: -10px;
-  top: 50%;
-
-  transform: translateY(-50%) translateX(10px);
-
-  padding: 4px 10px;
-  border-radius: 999px;
-  background-color: #787662;
-  color: #eaeae1;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-
-  opacity: 0;
-  pointer-events: none;
-
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
-/* Show On Hover */
-.menu-btn:hover .coming-soon-badge,
-.logout-btn:hover .coming-soon-badge {
-  opacity: 1;
-  transform: translateY(-50%) translateX(0);
-}
-
 /* Base Dot */
 .notification-dot {
   position: absolute;

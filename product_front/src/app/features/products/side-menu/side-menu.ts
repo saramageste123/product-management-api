@@ -8,6 +8,7 @@ import { NotificationsPopupComponent } from '../notifications/notifications-popu
 import { Notification } from '../models/notification.model';
 import { NotificationService } from '../service/notification.service';
 import { NotificationDetailsModalComponent } from '../notifications/notifications-details-modal/notifications-details-modal';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-side-menu',
@@ -50,7 +51,11 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   private notificationsSubscription?: Subscription;
 
-  constructor(private notificationService: NotificationService, private router: Router) {}
+  constructor(
+    private notificationService: NotificationService, 
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.notificationsSubscription =
@@ -119,4 +124,12 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     this.closeMenu.emit();
     this.router.navigate(['/promotions']);
   }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => this.router.navigate(['/login']),
+      error: () => this.router.navigate(['/login'])
+    });
+  }
+  
 }
