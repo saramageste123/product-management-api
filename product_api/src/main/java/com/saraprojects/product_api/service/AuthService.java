@@ -6,8 +6,10 @@ import com.saraprojects.product_api.exception.EmailAlreadyExistsException;
 import com.saraprojects.product_api.exception.InvalidCredentialsException;
 import com.saraprojects.product_api.exception.PasswordMismatchException;
 import com.saraprojects.product_api.exception.InvalidRequestException;
+import com.saraprojects.product_api.model.LoginAttempt;
 import com.saraprojects.product_api.model.RefreshToken;
 import com.saraprojects.product_api.model.User;
+import com.saraprojects.product_api.repository.LoginAttemptRepository;
 import com.saraprojects.product_api.repository.UserRepository;
 import com.saraprojects.product_api.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -29,6 +32,7 @@ public class AuthService {
     private static final Set<Integer> ALLOWED_AVATAR_IDS = Set.of(1, 2, 3, 4, 5, 6, 7, 8);
 
     private final UserRepository userRepository;
+    private final LoginAttemptRepository loginAttemptRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
@@ -58,7 +62,6 @@ public class AuthService {
                 .employeeCode(employeeCode)
                 .password(passwordEncoder.encode(dto.password()))
                 .avatarId(dto.avatarId())
-                .failedAttempts(0)
                 .build();
 
         userRepository.save(user);
@@ -75,42 +78,36 @@ public class AuthService {
 
     public AuthResponseDTO login(LoginRequestDTO dto) {
 
-        User user = userRepository.findByEmployeeCode(dto.employeeCode())
-                .orElseThrow(() -> new InvalidCredentialsException("Invalid employee code or password"));
+        LoginAttempt attempt = loginAttemptRepository.findByEmployeeCode(dto.employeeCode())
+                .orElseGet(() -> LoginAttempt.builder()
+                        .employeeCode(dto.employeeCode())
+                        .failedAttempts(0)
+                        .build());
 
         LocalDateTime now = LocalDateTime.now();
 
-        if (user.getLockedUntil() != null) {
-            if (user.getLockedUntil().isAfter(now)) {
-                throw new AccountLockedException(buildLockMessage(user.getLockedUntil(), now));
+        if (attempt.getLockedUntil() != null) {
+            if (attempt.getLockedUntil().isAfter(now)) {
+                throw new AccountLockedException(buildLockMessage(attempt.getLockedUntil(), now));
             }
-            user.setFailedAttempts(0);
-            user.setLockedUntil(null);
+            attempt.setFailedAttempts(0);
+            attempt.setLockedUntil(null);
         }
 
-        boolean passwordMatches = passwordEncoder.matches(dto.password(), user.getPassword());
+        Optional<User> userOpt = userRepository.findByEmployeeCode(dto.employeeCode());
+
+        boolean passwordMatches = userOpt.isPresent()
+        && passwordEncoder.matches(dto.password(),  userOpt.get().getPassword());
 
         if (!passwordMatches) {
-            int attempts = user.getFailedAttempts() + 1;
-            user.setFailedAttempts(attempts);
-
-            if (attempts >= MAX_ATTEMPTS) {
-                LocalDateTime lockedUntil = now.plusMinutes(LOCK_DURATION_MINUTES);
-                user.setLockedUntil(lockedUntil);
-                userRepository.save(user);
-                throw new AccountLockedException(buildLockMessage(lockedUntil, now));
-            }
-
-            userRepository.save(user);
-            int remaining = MAX_ATTEMPTS - attempts;
-            throw new InvalidCredentialsException(
-                    "Invalid employee code or password. " + remaining + " attempt(s) remaining before lockout."
-            );
+            registerFailedAttempt(attempt, now);
         }
 
-        user.setFailedAttempts(0);
-        user.setLockedUntil(null);
-        userRepository.save(user);
+        attempt.setFailedAttempts(0);
+        attempt.setLockedUntil(null);
+        loginAttemptRepository.save(attempt);
+
+        User user = userOpt.get();
 
         String accessToken = jwtService.generateAccessToken(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
@@ -148,6 +145,24 @@ public class AuthService {
     public void logout(RefreshRequestDTO dto) {
         RefreshToken token = refreshTokenService.validateAndGet(dto.refreshToken());
         refreshTokenService.revoke(token);
+    }
+
+    private void registerFailedAttempt(LoginAttempt attempt, LocalDateTime now) {
+        int attempts = attempt.getFailedAttempts() + 1;
+        attempt.setFailedAttempts(attempts);
+
+        if (attempts >= MAX_ATTEMPTS) {
+            LocalDateTime lockedUntil = now.plusMinutes(LOCK_DURATION_MINUTES);
+            attempt.setLockedUntil(lockedUntil);
+            loginAttemptRepository.save(attempt);
+            throw new AccountLockedException(buildLockMessage(lockedUntil, now));
+        }
+
+        loginAttemptRepository.save(attempt);
+        int remaining = MAX_ATTEMPTS - attempts;
+        throw new InvalidCredentialsException(
+                "Invalid employee code or password. " + remaining + " attempt(s) remaining before lockout."
+        );
     }
 
     private String generateUniqueEmployeeCode() {

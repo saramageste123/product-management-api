@@ -31,10 +31,4 @@ public class User {
     @Column(nullable = false)
     private Integer avatarId;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private int failedAttempts = 0;
-
-    private LocalDateTime lockedUntil;
-
 }
