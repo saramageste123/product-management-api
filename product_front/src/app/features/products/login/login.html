@@ -47,7 +47,7 @@
 
     <div class="login-links">
       <a href="javascript:void(0)">Forgot your password?</a>
-      <a href="javascript:void(0)">Create account</a>
+      <a href="javascript:void(0)" (click)="openRegisterModal()">Create account</a>
     </div>
 
   </form>
@@ -65,3 +65,10 @@
   </div>
 
 </div>
+
+@if (showRegisterModal()) {
+  <app-register-modal
+    (closed)="closeRegisterModal()"
+    (registered)="onRegistered($event)"
+  ></app-register-modal>
+}

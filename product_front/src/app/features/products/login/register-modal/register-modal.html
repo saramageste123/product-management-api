@@ -1,0 +1,99 @@
+<div class="modal-backdrop" (click)="cancel()">
+
+    <button type="button" class="back-btn" (click)="cancel()">
+        <span class="material-symbols-rounded">chevron_left</span>
+    </button>
+
+    <div class="modal-panel" (click)="$event.stopPropagation()">
+
+        <div class="avatar-selector">
+
+            <button type="button" class="avatar-arrow" (click)="previousAvatar()">
+                <span class="material-symbols-rounded">chevron_left</span>
+            </button>
+
+            <div class="avatar-preview">
+                <img [src]="avatarImage()" alt="Selected avatar" />
+            </div>
+
+            <button type="button" class="avatar-arrow" (click)="nextAvatar()">
+                <span class="material-symbols-rounded">chevron_right</span>
+            </button>
+
+        </div>
+
+        <form class="register-form" (ngSubmit)="submit()">
+
+            <div class="register-fields">
+
+                <div class="field-wrapper" [class.input-error]="nameInvalid()">
+                    <input
+                    type="text"
+                    placeholder="Name"
+                    [ngModel]="name()"
+                    (ngModelChange)="name.set($event)"
+                    name="name"
+                    [class.input-error]="nameInvalid()"
+                    [disabled]="submitting()"
+                    />
+                    <div class="field-divider"></div>
+                </div>
+
+                <div class="field-wrapper" [class.input-error]="emailInvalid()">
+                    <input
+                    type="email"
+                    placeholder="Email"
+                    [ngModel]="email()"
+                    (ngModelChange)="email.set($event); emailTaken.set(false)"
+                    name="email"
+                    [class.input-error]="emailInvalid()"
+                    [disabled]="submitting()"
+                    />
+                    <div class="field-divider"></div>
+                </div>
+
+                <div class="field-wrapper" [class.input-error]="passwordInvalid()">
+                    <input
+                    type="password"
+                    placeholder="Password"
+                    [ngModel]="password()"
+                    (ngModelChange)="password.set($event)"
+                    name="password"
+                    [class.input-error]="passwordInvalid()"
+                    [disabled]="submitting()"
+                    />
+                    <div class="field-divider"></div>
+                </div>
+
+                <div class="field-wrapper" [class.input-error]="confirmPasswordInvalid()">
+                    <input
+                    type="password"
+                    placeholder="Repeat Password"
+                    [ngModel]="confirmPassword()"
+                    (ngModelChange)="confirmPassword.set($event)"
+                    name="confirmPassword"
+                    [class.input-error]="confirmPasswordInvalid()"
+                    [disabled]="submitting()"
+                    />
+                    <div class="field-divider"></div>
+                </div>
+                
+            </div>
+
+            <p class="message" [class.is-error]="triedSave() && errorMessage() !== passwordHint">
+                {{ errorMessage() }}
+            </p>
+
+            <div class="submit-row">
+
+                <button type="submit" class="signup-btn" [disabled]="submitting()">
+                {{ submitting() ? 'Signing up...' : 'Sign Up' }}
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

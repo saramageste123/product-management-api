@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { AuthService } from '../service/auth.service';
+import { RegisterModalComponent } from './register-modal/register-modal';
+import { RegisterResponse } from '../models/auth.model';
 
 type Fruit = 'banana' | 'orange' | 'apple';
 
@@ -14,7 +16,7 @@ const ANIMATION_DURATION_MS = 650;
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RegisterModalComponent],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -30,6 +32,8 @@ export class LoginComponent implements OnDestroy {
   errorMessage = signal('');
   submitting = signal(false);
   isLocked = signal(false);
+
+  showRegisterModal = signal(false);
 
   private lockIntervalId?: ReturnType<typeof setInterval>;
   private animationTimeoutId?: ReturnType<typeof setTimeout>;
@@ -171,4 +175,19 @@ export class LoginComponent implements OnDestroy {
     this.transitionFruit('banana');
   }
 
+  openRegisterModal(): void {
+    this.showRegisterModal.set(true);
+  }
+
+  closeRegisterModal(): void {
+    this.showRegisterModal.set(false);
+  }
+
+  onRegistered(response: RegisterResponse): void {
+    // TODO: substituir por tela "Welcome to Feirinha" na próxima etapa.
+    // Por enquanto, fecha o modal e já preenche o código no campo de login.
+    this.showRegisterModal.set(false);
+    this.employeeCode.set(response.employeeCode);
+  }
+  
 }

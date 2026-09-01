@@ -15,3 +15,18 @@ export interface AuthResponse {
   name: string;
   avatarId: number;
 }
+
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  avatarId: number;
+}
+
+export interface RegisterResponse {
+  employeeCode: string;
+  name: string;
+  avatarId: number;
+  message: string;
+}
